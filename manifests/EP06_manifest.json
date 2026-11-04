@@ -1,0 +1,77 @@
+{
+  "lesson_number": 6,
+  "episode_id": "EP06",
+  "title": "The Castle Hill Convict Rebellion and the Rum Rebellion",
+  "historical_period": "1804-1808",
+  "totem": "A stamped NSW Corps promissory copper token or a forged iron pike tip",
+  "tfcc": {
+    "trigger": "The suppression of the 1798 Irish Rebellion transporting United Irishmen to Sydney, intersecting with the NSW Corps monopoly over spirits and land barter.",
+    "forces": "Agrarian Irish republican insurgency and martial law vs. entrenched military mercantilism and private syndicate cartels under John Macarthur.",
+    "costs": "15 convicts executed at Castle Hill/Sydney; total subversion of Crown civil administration in the only military coup d etat on Australian soil.",
+    "consequence": "The recall of Governor William Bligh, the permanent dismantling and replacement of the NSW Corps by Governor Lachlan Macquarie s 73rd Regiment, and the formal transition from penal fiefdom to civil rule of law."
+  },
+  "facts": {
+    "date": "March 4\u20135, 1804 (Castle Hill) & January 26, 1808 (Rum Rebellion)",
+    "location": "Castle Hill / Rouse Hill (Toongabbie) and Government House, Sydney",
+    "authority_leader": "Major George Johnston & Lieutenant-Governor William Paterson (NSW Corps)",
+    "resistance_leader": "Philip Cunningham & William Johnston (Castle Hill); Governor William Bligh (1808)",
+    "casualties_authorities": "0 fatal military casualties across both clashes",
+    "casualties_resistants": "~15 convicts killed in battle at Rouse Hill; 9 executed; 2 hanged in chains; Bligh placed under house arrest for over a year",
+    "victor": "Major George Johnston & John Macarthur (NSW Corps cartel)",
+    "major_consequence": "Crown intervention ending private military trade monopolies; deployment of Macquarie in 1810 to establish institutional governance."
+  },
+  "tactical_tall_facts": [
+    "Over 300 convicts, predominantly Irish political transportees from the 1798 uprising, broke out of the Government Agricultural Farm at Castle Hill on March 4, 1804.",
+    "Major George Johnston rode through the night from Sydney to Parramatta, covering 24 km in under 4 hours to mobilize troops and loyalist civilians.",
+    "Philip Cunningham approached under a flag of truce at Rouse Hill; he was unceremoniously seized and summarily hanged at Hawkesbury without a court trial.",
+    "The 1804 clash marked the first declaration of martial law in Australian history, enacted across Parramatta, Castle Hill, and the Hawkesbury basin.",
+    "The New South Wales Corps (nicknamed Rum Corps) controlled the import of spirits, inflating prices up to 400% as a captive barter currency.",
+    "John Macarthur arrived with \u00a3497 in capital and used military access to accumulate over 10,000 acres at the Cowpastures (Camden) for merino breeding.",
+    "Governor William Bligh was arrested on January 26, 1808\u2014the 20th anniversary of the First Fleet landing\u2014when 400 soldiers of the NSW Corps marched on Government House.",
+    "The Corps rebel administration governed New South Wales illegally for nearly two years until the arrival of Lachlan Macquarie on December 28, 1809.",
+    "Major George Johnston was subsequently court-martialed at Chelsea Hospital in London in 1811 and cashiered (dismissed) from the British Army.",
+    "The 1808 rebellion forced the British Colonial Office to abandon military administration and assign regular British regiments to enforce statutory oversight."
+  ],
+  "lyrical_lifelines": [
+    {
+      "lyric": "Pikes forged under moonlight cold",
+      "directive": "Examine convict resistance networks across the Hawkesbury."
+    },
+    {
+      "lyric": "Parramatta drums call the line",
+      "directive": "Track the speed and logistics of colonial military response."
+    },
+    {
+      "lyric": "Broken truce upon the hill",
+      "directive": "Analyze the suspension of civil justice under martial law."
+    },
+    {
+      "lyric": "Nine swing from the gum",
+      "directive": "Quantify judicial violence as an instrument of social order."
+    },
+    {
+      "lyric": "Rum buys land and grain",
+      "directive": "Chart how cartel monopolies distorted early currency systems."
+    },
+    {
+      "lyric": "Scarlet coats take the state",
+      "directive": "Define the Rum Rebellion as an economic coup d etat."
+    },
+    {
+      "lyric": "Fleece expands across the soil",
+      "directive": "Map pastoral land grabs to First Nations displacement."
+    },
+    {
+      "lyric": "The Governor locked in chains",
+      "directive": "Contrast naval executive command against local merchant capital."
+    },
+    {
+      "lyric": "Seventy-third disembarks the bay",
+      "directive": "Trace Macquarie s arrival to the birth of civil institutions."
+    },
+    {
+      "lyric": "Fiefdom bows to statute law",
+      "directive": "Synthesize the transition from military monopoly to governance."
+    }
+  ]
+}
