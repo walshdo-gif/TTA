@@ -3,493 +3,313 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Australian History - EP06 // Tactical Mission Canvas</title>
+<title>EP06 // The Iron Fiefdom (1804–1808)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #020712; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden; user-select: none; }
-.top-hud { position: absolute; top: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(2, 6, 18, 0.98) 0%, rgba(2, 6, 18, 0.92) 80%, rgba(2, 6, 18, 0) 100%); backdrop-filter: blur(14px); z-index: 100; padding: 10px 18px 8px; display: flex; flex-direction: column; gap: 6px; border-bottom: 1.5px solid rgba(56, 189, 248, 0.25); box-shadow: 0 4px 30px rgba(0,0,0,0.8); }
-.hud-bar { display: flex; align-items: center; justify-content: space-between; }
-.hud-pills { display: flex; align-items: center; gap: 8px; }
-.pill-curriculum { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1.5px solid rgba(56, 189, 248, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; }
-.pill-ep { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1.5px solid rgba(245, 158, 11, 0.45); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 800; }
-.hud-buttons { display: flex; align-items: center; gap: 8px; }
-.btn-nav { background: #0f172a; border: 1.5px solid #38bdf8; color: #38bdf8; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 12px rgba(56, 189, 248, 0.25); transition: all 0.2s; }
-.btn-nav:hover, .btn-nav:active { background: #0284c7; color: #ffffff; }
-.btn-green { border-color: #10b981; color: #10b981; box-shadow: 0 0 12px rgba(16, 185, 129, 0.25); }
-.btn-green:hover, .btn-green:active { background: #059669; color: #ffffff; }
-.hw-container { background: rgba(15, 23, 42, 0.92); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 8px; padding: 8px 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
-.hw-header { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; font-size: 10.5px; font-weight: 900; letter-spacing: 1px; color: #94a3b8; text-transform: uppercase; }
-.hw-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulse-ring 1.8s infinite; }
-@keyframes pulse-ring { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
-.hw-question { font-size: 15px; line-height: 1.45; color: #f1f5f9; font-weight: 600; }
-.hw-kw { padding: 2px 6px; border-radius: 4px; transition: all 0.3s ease; border-bottom: 2px dashed rgba(148, 163, 184, 0.6); }
-.hw-kw.active-highlight { background: rgba(245, 158, 11, 0.35); color: #fef08a; border-bottom: 2.5px solid #f59e0b; font-weight: 800; box-shadow: 0 0 16px rgba(245, 158, 11, 0.6); text-shadow: 0 0 8px rgba(245, 158, 11, 0.7); }
-.map-viewport { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background: #020712; overflow: hidden; }
-#tactical-map { width: 100%; height: 100%; display: block; }
-.sea-base { fill: #040d1f; }
-.rhumb-line { stroke: rgba(56, 189, 248, 0.1); stroke-width: 0.8; stroke-dasharray: 4, 10; }
-.landmass { fill: #0c1a33; stroke: #38bdf8; stroke-width: 2.5; filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.35)); }
-.terrain-relief { fill: none; stroke: rgba(245, 158, 11, 0.15); stroke-width: 1.5; }
-.river-stroke { fill: none; stroke: #0284c7; stroke-linecap: round; stroke-linejoin: round; }
-.historic-road { fill: none; stroke: #f59e0b; stroke-width: 2.8; stroke-dasharray: 6, 5; filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5)); }
-.map-cartouche { fill: rgba(11, 19, 38, 0.85); stroke: rgba(56, 189, 248, 0.4); stroke-width: 1.5; }
-#laser-svg { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 105; }
-.pin-marker { position: absolute; transform: translate(-50%, -50%); cursor: pointer; z-index: 80; display: flex; flex-direction: column; align-items: center; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
-.pin-marker:active { transform: translate(-50%, -50%) scale(0.92); }
-.pin-marker.active-pin { z-index: 98; }
-.pin-beacon { position: absolute; width: 46px; height: 46px; border-radius: 50%; border: 2px solid #38bdf8; background: rgba(56, 189, 248, 0.22); animation: beacon-ping 2s infinite ease-out; }
-@keyframes beacon-ping { 0% { transform: scale(0.35); opacity: 1; } 100% { transform: scale(2.2); opacity: 0; } }
-.pin-badge { width: 36px; height: 36px; border-radius: 50%; background: #091326; border: 2.5px solid #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 13.5px; font-weight: 900; color: #38bdf8; box-shadow: 0 0 18px rgba(56, 189, 248, 0.7); position: relative; z-index: 2; transition: all 0.25s; }
-.pin-marker.active-pin .pin-badge { background: #f59e0b; border-color: #ffffff; color: #020617; transform: scale(1.3); box-shadow: 0 0 25px #f59e0b, 0 0 45px rgba(245, 158, 11, 0.85); }
-.pin-caption { margin-top: 6px; background: rgba(11, 19, 38, 0.95); border: 1.5px solid rgba(56, 189, 248, 0.4); color: #f1f5f9; font-size: 12px; font-weight: 800; padding: 4px 9px; border-radius: 6px; white-space: nowrap; pointer-events: none; box-shadow: 0 4px 14px rgba(0,0,0,0.8); }
-.pin-marker.active-pin .pin-caption { border-color: #f59e0b; color: #fef08a; background: #070e1e; }
-.hud-side-drawer { position: fixed; top: 140px; right: 18px; bottom: 18px; width: 440px; max-width: calc(100vw - 36px); background: rgba(9, 15, 30, 0.98); border: 2px solid #38bdf8; border-radius: 14px; padding: 16px 18px; box-shadow: -10px 10px 45px rgba(0,0,0,0.9), 0 0 30px rgba(56, 189, 248, 0.35); backdrop-filter: blur(18px); z-index: 120; display: none; flex-direction: column; overflow-y: auto; animation: slideDrawer 0.28s cubic-bezier(0.16, 1, 0.3, 1); }
-@keyframes slideDrawer { from { transform: translateX(120px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-.drawer-header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1.5px solid #1e293b; padding-bottom: 10px; margin-bottom: 12px; }
-.drawer-title { font-size: 17px; font-weight: 900; color: #f8fafc; letter-spacing: 0.5px; }
-.drawer-loc { font-size: 11.5px; color: #38bdf8; font-weight: 800; text-transform: uppercase; margin-top: 3px; }
-.btn-close-drawer { background: rgba(30, 41, 59, 0.85); border: 1.5px solid #475569; color: #94a3b8; font-size: 22px; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
-.btn-close-drawer:hover, .btn-close-drawer:active { color: #f8fafc; background: #dc2626; border-color: #ef4444; }
-.drawer-fact { font-size: 14px; line-height: 1.5; color: #e2e8f0; margin-bottom: 12px; background: rgba(15, 23, 42, 0.7); padding: 10px 12px; border-radius: 8px; border: 1px solid #1e293b; }
-.briefing-control-bar { display: flex; align-items: center; justify-content: space-between; background: rgba(15, 23, 42, 0.9); border: 1.5px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; }
-.btn-play-sequence { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 12px rgba(2, 132, 199, 0.5); }
-.sound-status { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: #38bdf8; }
-.sound-wave { display: flex; align-items: flex-end; gap: 2px; height: 14px; }
-.wave-bar { width: 3px; height: 3px; background: #38bdf8; border-radius: 1px; }
-.wave-bar.playing { animation: wavePulse 0.5s infinite alternate ease-in-out; }
-.wave-bar:nth-child(2) { animation-delay: 0.1s; }
-.wave-bar:nth-child(3) { animation-delay: 0.25s; }
-.wave-bar:nth-child(4) { animation-delay: 0.15s; }
-@keyframes wavePulse { 0% { height: 3px; } 100% { height: 14px; } }
-.card-speaker { border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; transition: all 0.3s ease; }
-.card-speaker.active-talking { transform: scale(1.02); box-shadow: 0 0 18px currentColor; }
-.eyewitness-card { background: rgba(56, 189, 248, 0.08); border-left: 4px solid #38bdf8; color: #38bdf8; }
-.reg-card { background: rgba(16, 185, 129, 0.08); border-left: 4px solid #10b981; color: #10b981; }
-.edwina-card { background: rgba(245, 158, 11, 0.08); border-left: 4px solid #f59e0b; color: #f59e0b; }
-.speaker-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-.speaker-title-group { display: flex; align-items: center; gap: 6px; }
-.speaker-badge { font-size: 9.5px; font-weight: 900; letter-spacing: 0.8px; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; color: #020617; }
-.badge-eyewitness { background: #38bdf8; }
-.badge-reg { background: #10b981; }
-.badge-edwina { background: #f59e0b; }
-.speaker-name { font-size: 12px; font-weight: 800; color: #f1f5f9; }
-.btn-single-voice { background: rgba(255, 255, 255, 0.08); border: 1px solid currentColor; color: inherit; padding: 3px 8px; border-radius: 4px; font-size: 10.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; }
-.speaker-quote-text { font-size: 13.5px; line-height: 1.45; color: #cbd5e1; margin: 0; }
-.italic-quote { font-style: italic; color: #e2e8f0; }
-.modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 18, 0.94); backdrop-filter: blur(14px); z-index: 250; display: none; align-items: center; justify-content: center; padding: 20px; }
-.modal-card { background: #091326; border: 2px solid #1e293b; border-radius: 14px; max-width: 860px; width: 100%; max-height: 88vh; overflow-y: auto; padding: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(56, 189, 248, 0.25); }
-.modal-header-row { display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid #1e293b; padding-bottom: 12px; margin-bottom: 16px; }
-.modal-header-row h3 { margin: 0 0 0 10px; font-size: 16px; color: #f8fafc; font-weight: 900; flex: 1; }
-.facts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-.fact-item { background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 8px; padding: 12px; }
-.fact-item.full-width { grid-column: span 2; }
-.fact-item label { display: block; font-size: 10px; font-weight: 900; color: #64748b; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase; }
-.fact-item div { font-size: 13.5px; color: #e2e8f0; line-height: 1.4; }
-.tfcc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; border-top: 1.5px solid #1e293b; padding-top: 14px; }
-.tfcc-card { background: rgba(15, 23, 42, 0.6); border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px; }
-.tfcc-hdr { font-size: 10px; font-weight: 900; color: #38bdf8; margin-bottom: 4px; }
-.tfcc-body { font-size: 12px; color: #cbd5e1; line-height: 1.35; }
-@media (max-width: 900px) {
-  .top-hud { padding: 8px 12px; }
-  .hw-question { font-size: 13.5px; }
-  .hud-side-drawer { width: 360px; right: 10px; top: 155px; bottom: 10px; padding: 12px; }
-  .facts-grid { grid-template-columns: 1fr; }
-  .fact-item.full-width { grid-column: span 1; }
-  .tfcc-grid { grid-template-columns: 1fr; }
+:root {
+  --bg-dark: #060a12;
+  --panel-bg: rgba(10, 16, 28, 0.88);
+  --panel-border: rgba(56, 189, 248, 0.22);
+  --accent-gold: #f59e0b;
+  --accent-cyan: #38bdf8;
+  --accent-crimson: #ef4444;
+  --accent-emerald: #10b981;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --font-display: 'Cinzel', serif;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 35mm Atmospheric Stage Plate Layer */
+.cinematic-plate {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 75% 40%, rgba(245, 158, 11, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 20% 70%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(6, 10, 18, 0.75) 0%, rgba(6, 10, 18, 0.92) 100%),
+    radial-gradient(ellipse at center, #1e293b 0%, #060a12 85%);
+  z-index: 1;
+}
+.cinematic-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Tactical HUD Top Bar */
+.hud-header {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  right: 20px;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hud-pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  text-transform: uppercase;
+}
+.hud-pill.alert {
+  border-color: rgba(245, 158, 11, 0.4);
+  color: var(--accent-gold);
+}
+
+/* Strategic Mission Map */
+.canvas-tactical-map {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.incident-pin {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid var(--accent-cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.incident-pin.active {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  transform: translate(-50%, -50%) scale(1.18);
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.6);
+}
+
+/* 60/40 Asymmetric Right-Bank Tactical Card */
+.tactical-dossier-card {
+  position: absolute;
+  top: 75px;
+  right: 24px;
+  bottom: 95px;
+  width: min(480px, 46vw);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  backdrop-filter: blur(16px);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.6);
+  overflow-y: auto;
+}
+.dossier-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.dossier-title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.25;
+  margin-bottom: 14px;
+}
+
+/* Tall Fact Evidentiary Block */
+.evidentiary-block {
+  background: rgba(15, 23, 42, 0.65);
+  border-left: 3px solid var(--accent-gold);
+  padding: 12px 14px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 16px;
+}
+.evidentiary-block p {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #e2e8f0;
+}
+.primary-source-citation {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--accent-gold);
+  margin-top: 6px;
+  letter-spacing: 0.05em;
+}
+
+/* Interactive Dialogue Stances */
+.stance-tray {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+}
+.stance-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px 14px;
+  position: relative;
+}
+.stance-card.eyewitness { border-left: 3px solid var(--accent-crimson); }
+.stance-card.reg { border-left: 3px solid var(--accent-emerald); }
+.stance-badge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.stance-card.eyewitness .stance-badge { color: var(--accent-crimson); }
+.stance-card.reg .stance-badge { color: var(--accent-emerald); }
+.stance-text {
+  font-size: 13px;
+  line-height: 1.45;
+  color: #cbd5e1;
+}
+
+/* Household Totem & Reg Analogy Bar */
+.kinetic-dock {
+  position: absolute;
+  bottom: 16px;
+  left: 20px;
+  right: 20px;
+  height: 60px;
+  background: rgba(10, 16, 28, 0.92);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+.totem-anchor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.totem-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid var(--accent-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+.analogy-btn {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid var(--accent-emerald);
+  color: var(--accent-emerald);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 0.08em;
 }
 </style>
 </head>
 <body>
-<div class="top-hud">
-  <div class="hud-bar">
-    <div class="hud-pills">
-      <span class="pill-curriculum">NESA Stage 5 History</span>
-      <span class="pill-ep">EP06 // 1804–1808</span>
-    </div>
-    <div class="hud-buttons">
-      <button class="btn-nav" onclick="toggleModal('sitrepModal')">Historic Facts // SitRep</button>
-      <button class="btn-nav btn-green" onclick="toggleModal('assetsModal')">Dossier (10+10)</button>
-    </div>
-  </div>
-  <div class="hw-container">
-    <div class="hw-header">
-      <span class="hw-dot"></span>
-      <span>Mission Map Strategy &bull; High School Homework Question</span>
-    </div>
-    <div class="hw-question">
-      To what extent did the <span id="kw-castle-hill" class="hw-kw">Castle Hill Convict Rebellion (1804)</span> and the <span id="kw-rum-rebellion" class="hw-kw">Rum Rebellion (1808)</span> demonstrate that <span id="kw-cartels" class="hw-kw">military cartels</span> and <span id="kw-martial-law" class="hw-kw">martial law</span> undermined <span id="kw-civil-gov" class="hw-kw">British civil governance</span> in early colonial New South Wales?
-    </div>
-  </div>
+
+<div class="cinematic-plate"></div>
+
+<div class="hud-header">
+  <div class="hud-pill">NESA Stage 5 // Episode 06: 1804–1808</div>
+  <div class="hud-pill alert">Sovereign Delta: Rum Monopoly vs Civil Law</div>
 </div>
 
-<div class="map-viewport">
-  <svg id="tactical-map" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <rect class="sea-base" width="1000" height="700"/>
-    <g class="rhumb-line">
-      <line x1="880" y1="320" x2="0" y2="100"/>
-      <line x1="880" y1="320" x2="0" y2="500"/>
-      <line x1="880" y1="320" x2="500" y2="700"/>
-      <line x1="880" y1="320" x2="300" y2="0"/>
-      <line x1="880" y1="320" x2="1000" y2="600"/>
-      <line x1="880" y1="320" x2="1000" y2="120"/>
-    </g>
-    <path class="landmass" d="M 450 350 C 500 340 550 360 600 350 C 660 338 700 370 760 360 C 810 345 860 315 920 295 C 960 280 1000 305 1020 290 L 1020 400 L 900 400 C 850 380 800 400 750 390 C 700 380 650 410 580 400 C 520 390 480 370 450 350 Z"/>
-    <path class="landmass" d="M 120 700 C 140 580 170 500 150 380 C 130 280 190 180 210 160 C 250 130 300 140 330 100 C 360 60 400 30 460 10 L 520 10 C 460 60 410 120 370 170 C 330 220 280 280 250 350 C 220 420 210 520 190 700 Z"/>
-    <path class="landmass" d="M 720 560 C 760 540 820 560 870 610 C 900 650 940 660 1000 650 L 1000 700 L 700 700 C 700 650 710 600 720 560 Z"/>
-    <path class="river-stroke" d="M 130 700 C 150 580 180 500 160 380 C 140 280 200 180 220 160 C 260 130 310 140 340 100 C 370 60 410 30 460 10" stroke-width="5"/>
-    <path class="river-stroke" d="M 450 350 C 500 340 550 360 600 350 C 660 338 700 370 760 360 C 810 345 860 315 920 295 C 960 280 1000 305 1020 290" stroke-width="6"/>
-    <path class="terrain-relief" d="M 50 100 Q 180 250 110 460 T 70 680"/>
-    <path class="terrain-relief" d="M 90 80 Q 230 220 160 490 T 130 690"/>
-    <path class="terrain-relief" d="M 150 60 Q 300 200 220 530 T 190 700"/>
-    <path class="terrain-relief" d="M 300 50 Q 420 190 370 380 T 350 640"/>
-    <path class="historic-road" d="M 780 320 C 720 360 640 355 570 350 C 510 350 470 345 450 340"/>
-    <path class="historic-road" d="M 450 340 C 400 300 350 270 290 220 C 260 195 230 180 210 165"/>
-    <path class="historic-road" d="M 450 340 C 390 420 320 480 270 520 C 240 550 230 600 230 680"/>
-    <g transform="translate(930, 260) scale(0.65)" opacity="0.6">
-      <path d="M 10 30 C 25 35 45 35 60 30 L 55 42 C 40 45 20 45 15 42 Z" fill="#38bdf8"/>
-      <line x1="25" y1="30" x2="25" y2="8" stroke="#38bdf8" stroke-width="1.8"/>
-      <line x1="42" y1="30" x2="42" y2="5" stroke="#38bdf8" stroke-width="1.8"/>
-      <path d="M 25 10 Q 35 12 40 10 L 40 22 Q 32 24 25 22 Z" fill="rgba(56,189,248,0.3)" stroke="#38bdf8"/>
-      <text x="0" y="55" fill="rgba(56,189,248,0.7)" font-size="9" font-weight="800">HMS PORPOISE</text>
-    </g>
-    <rect class="map-cartouche" x="30" y="145" width="230" height="50" rx="6"/>
-    <text x="42" y="165" fill="#f59e0b" font-size="10.5" font-weight="900" letter-spacing="1">CHART OF NEW SOUTH WALES</text>
-    <text x="42" y="182" fill="#94a3b8" font-size="9" font-weight="700">MILITARY JURISDICTION &bull; 1804–1808</text>
-    <text x="210" y="135" class="map-label" font-size="12">HAWKESBURY AGRICULTURAL BASIN</text>
-    <text x="430" y="380" class="map-label" font-size="13">PARRAMATTA GARRISON</text>
-    <text x="790" y="270" class="map-label" font-size="14" fill="#38bdf8">PORT JACKSON // SYDNEY COVE</text>
-    <text x="750" y="600" class="map-label" font-size="12">BOTANY BAY ANCHORAGE</text>
-    <text x="170" y="650" class="map-label" font-size="12" fill="#f59e0b">COWPASTURES // MERINO RUNS</text>
-    <text x="280" y="260" fill="#f43f5e" font-size="11" font-weight="900" letter-spacing="1">CONVICT MARCH ON PARRAMATTA &rarr;</text>
-    <text x="520" y="380" fill="#f59e0b" font-size="11" font-weight="900" letter-spacing="1">&larr; MAJOR JOHNSTON'S 24KM NIGHT MUSTER</text>
-    <g transform="translate(930, 610) scale(0.85)" opacity="0.65">
-      <circle cx="0" cy="0" r="34" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
-      <polygon points="0,-32 7,-8 0,0" fill="#38bdf8"/><polygon points="0,-32 -7,-8 0,0" fill="#0284c7"/>
-      <polygon points="0,32 7,8 0,0" fill="#64748b"/><polygon points="0,32 -7,8 0,0" fill="#334155"/>
-      <polygon points="32,0 8,7 0,0" fill="#64748b"/><polygon points="-32,0 -8,7 0,0" fill="#334155"/>
-      <text x="-5" y="-38" fill="#38bdf8" font-size="14" font-weight="900">N</text>
-    </g>
-  </svg>
-  <div id="pins-container"></div>
-</div>
-<svg id="laser-svg"></svg>
-
-<div class="hud-side-drawer" id="hud-drawer">
-  <div class="drawer-header">
-    <div>
-      <div class="drawer-title" id="d-title">Pin Title</div>
-      <div class="drawer-loc" id="d-loc">Location</div>
-    </div>
-    <button class="btn-close-drawer" onclick="closeDrawer()">&times;</button>
-  </div>
-  <div class="drawer-fact" id="d-fact">Fact goes here...</div>
-  <div class="briefing-control-bar">
-    <button class="btn-play-sequence" onclick="playFullVoiceSequence()">
-      <span>&#9654;</span> <span>Play Full Briefing (1 &bull; 2 &bull; 3)</span>
-    </button>
-    <div class="sound-status">
-      <div class="sound-wave" id="sound-anim">
-        <div class="wave-bar"></div><div class="wave-bar"></div>
-        <div class="wave-bar"></div><div class="wave-bar"></div>
-      </div>
-      <span id="sound-label">Atmosphere Active</span>
-    </div>
-  </div>
-  <div class="card-speaker eyewitness-card" id="card-eyewitness">
-    <div class="speaker-header">
-      <div class="speaker-title-group">
-        <span class="speaker-badge badge-eyewitness">1 &bull; Eyewitness</span>
-        <span class="speaker-name" id="d-spk">Eyewitness Name</span>
-      </div>
-      <button class="btn-single-voice" onclick="playSingleSpeaker('eyewitness')">&#9654; Listen</button>
-    </div>
-    <p class="speaker-quote-text italic-quote" id="d-quote">"Quote goes here..."</p>
-  </div>
-  <div class="card-speaker reg-card" id="card-reg">
-    <div class="speaker-header">
-      <div class="speaker-title-group">
-        <span class="speaker-badge badge-reg">2 &bull; Reg (Slang-Scaffold)</span>
-        <span class="speaker-name">Newcastle English</span>
-      </div>
-      <button class="btn-single-voice" onclick="playSingleSpeaker('reg')">&#9654; Listen</button>
-    </div>
-    <p class="speaker-quote-text" id="d-reg">Reg breakdown...</p>
-  </div>
-  <div class="card-speaker edwina-card" id="card-edwina">
-    <div class="speaker-header">
-      <div class="speaker-title-group">
-        <span class="speaker-badge badge-edwina">3 &bull; Avatar Edwina</span>
-        <span class="speaker-name">Band 6 Sovereign Strategy</span>
-      </div>
-      <button class="btn-single-voice" onclick="playSingleSpeaker('edwina')">&#9654; Listen</button>
-    </div>
-    <p class="speaker-quote-text" id="d-edw">Edwina advice...</p>
-  </div>
+<div class="canvas-tactical-map">
+  <div class="incident-pin active" style="top: 45%; left: 22%;">01</div>
+  <div class="incident-pin" style="top: 55%; left: 34%;">02</div>
+  <div class="incident-pin" style="top: 38%; left: 42%;">03</div>
 </div>
 
-<div class="modal-overlay" id="sitrepModal" onclick="toggleModal('sitrepModal')">
-  <div class="modal-card" onclick="event.stopPropagation()">
-    <div class="modal-header-row">
-      <span class="pill-curriculum">TACTICAL SPEC-SHEET</span>
-      <h3>EP06 // HISTORIC SITREP</h3>
-      <button class="btn-close-drawer" onclick="toggleModal('sitrepModal')">&times;</button>
-    </div>
-    <div class="facts-grid">
-      <div class="fact-item"><label>OPERATIONAL DATE</label><div>March 4–5, 1804 (Castle Hill) & January 26, 1808 (Rum Rebellion)</div></div>
-      <div class="fact-item"><label>LOCATION</label><div>Castle Hill / Rouse Hill (Toongabbie) and Government House, Sydney</div></div>
-      <div class="fact-item"><label>AUTHORITY LEADER</label><div>Major George Johnston & Lieutenant-Governor William Paterson (NSW Corps)</div></div>
-      <div class="fact-item"><label>RESISTANCE LEADER</label><div>Philip Cunningham & William Johnston (Castle Hill); Governor William Bligh (1808)</div></div>
-      <div class="fact-item full-width"><label>HUMAN & POLITICAL TOLL</label><div><strong style="color:#38bdf8;">Authorities/Settlers:</strong> 0 fatal military casualties across both clashes &nbsp;|&nbsp; <strong style="color:#f43f5e;">Resistants:</strong> ~15 convicts killed in battle at Rouse Hill; 9 executed; 2 hanged in chains; Bligh placed under house arrest for over a year</div></div>
-      <div class="fact-item"><label>VICTOR</label><div style="color:#fbbf24; font-weight:800;">Major George Johnston & John Macarthur (NSW Corps cartel)</div></div>
-      <div class="fact-item"><label>SYSTEMIC CONSEQUENCE</label><div>Crown intervention ending private military trade monopolies; deployment of Macquarie in 1810 to establish institutional governance.</div></div>
-    </div>
-    <div class="tfcc-grid">
-      <div class="tfcc-card"><div class="tfcc-hdr">1. TRIGGER</div><div class="tfcc-body">The suppression of the 1798 Irish Rebellion transporting United Irishmen to Sydney, intersecting with the NSW Corps monopoly over spirits and land barter.</div></div>
-      <div class="tfcc-card"><div class="tfcc-hdr">2. FORCES</div><div class="tfcc-body">Agrarian Irish republican insurgency and martial law vs. entrenched military mercantilism and private syndicate cartels under John Macarthur.</div></div>
-      <div class="tfcc-card"><div class="tfcc-hdr">3. COSTS</div><div class="tfcc-body">15 convicts executed at Castle Hill/Sydney; total subversion of Crown civil administration in the only military coup d etat on Australian soil.</div></div>
-      <div class="tfcc-card"><div class="tfcc-hdr">4. CONSEQUENCE</div><div class="tfcc-body">The recall of Governor William Bligh, the permanent dismantling and replacement of the NSW Corps by Governor Lachlan Macquarie s 73rd Regiment, and the formal transition from penal fiefdom to civil rule of law.</div></div>
-    </div>
+<div class="tactical-dossier-card">
+  <div class="dossier-tag">Pin 01 // Castle Hill Government Farm</div>
+  <h1 class="dossier-title">The Irish Breakout & Martial Proclamation</h1>
+  
+  <div class="evidentiary-block">
+    <p>On the night of March 4, 1804, over 200 United Irishmen political exiles seized weapons and set fire to the superintendent’s hut at Castle Hill, intending to link up with the Hawkesbury rebels. Governor King suspended civil magistrates and declared martial law across Parramatta, Ryde, and the Hawkesbury within six hours.</p>
+    <span class="primary-source-citation">Source: HRNSW Vol. V, pp. 345–349; Governor King's Martial Proclamation (5 March 1804).</span>
   </div>
-</div>
 
-<div class="modal-overlay" id="assetsModal" onclick="toggleModal('assetsModal')">
-  <div class="modal-card" onclick="event.stopPropagation()">
-    <div class="modal-header-row">
-      <span class="pill-curriculum" style="border-color:#10b981; color:#10b981;">CURRICULUM ASSET DOSSIER</span>
-      <h3>EP06 // 10 TALL FACTS & 10 LYRICAL LIFELINES</h3>
-      <button class="btn-close-drawer" onclick="toggleModal('assetsModal')">&times;</button>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
-      <div>
-        <h4 style="font-size:13px; color:#10b981; margin:0 0 12px; text-transform:uppercase; font-weight:900;">10 Tactical Tall Facts</h4>
-        <ol id="modal-tall-facts" style="padding-left:18px; margin:0; font-size:12.5px; color:#cbd5e1; line-height:1.5;"><li style='margin-bottom:8px;'>Over 300 convicts, predominantly Irish political transportees from the 1798 uprising, broke out of the Government Agricultural Farm at Castle Hill on March 4, 1804.</li><li style='margin-bottom:8px;'>Major George Johnston rode through the night from Sydney to Parramatta, covering 24 km in under 4 hours to mobilize troops and loyalist civilians.</li><li style='margin-bottom:8px;'>Philip Cunningham approached under a flag of truce at Rouse Hill; he was unceremoniously seized and summarily hanged at Hawkesbury without a court trial.</li><li style='margin-bottom:8px;'>The 1804 clash marked the first declaration of martial law in Australian history, enacted across Parramatta, Castle Hill, and the Hawkesbury basin.</li><li style='margin-bottom:8px;'>The New South Wales Corps (nicknamed Rum Corps) controlled the import of spirits, inflating prices up to 400% as a captive barter currency.</li><li style='margin-bottom:8px;'>John Macarthur arrived with £497 in capital and used military access to accumulate over 10,000 acres at the Cowpastures (Camden) for merino breeding.</li><li style='margin-bottom:8px;'>Governor William Bligh was arrested on January 26, 1808—the 20th anniversary of the First Fleet landing—when 400 soldiers of the NSW Corps marched on Government House.</li><li style='margin-bottom:8px;'>The Corps rebel administration governed New South Wales illegally for nearly two years until the arrival of Lachlan Macquarie on December 28, 1809.</li><li style='margin-bottom:8px;'>Major George Johnston was subsequently court-martialed at Chelsea Hospital in London in 1811 and cashiered (dismissed) from the British Army.</li><li style='margin-bottom:8px;'>The 1808 rebellion forced the British Colonial Office to abandon military administration and assign regular British regiments to enforce statutory oversight.</li></ol>
+  <div class="stance-tray">
+    <div class="stance-card eyewitness">
+      <div class="stance-badge">
+        <span>1. Eyewitness // Philip Cunningham</span>
+        <span>Primary Source</span>
       </div>
-      <div>
-        <h4 style="font-size:13px; color:#38bdf8; margin:0 0 12px; text-transform:uppercase; font-weight:900;">10 Lyrical Lifelines</h4>
-        <div id="modal-lyrics"><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>&ldquo;Pikes forged under moonlight cold&rdquo;</strong><div style='color:#94a3b8;font-size:10.5px;'>Examine convict resistance networks across the Hawkesbury.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>&ldquo;Parramatta drums call the line&rdquo;</strong><div style='color:#94a3b8;font-size:10.5px;'>Track the speed and logistics of colonial military response.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>&ldquo;Broken truce upon the hill&rdquo;</strong><div style='color:#94a3b8;font-size:10.5px;'>Analyze the suspension of civil justice under martial law.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>&ldquo;Nine swing from the gum&rdquo;</strong><div style='color:#94a3b8;font-size:10.5px;'>Quantify judicial violence as an instrument of social order.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>&ldquo;Rum buys land and grain&rdquo;</strong><div style='color:#94a3b8;font-size:10.5px;'>Chart how cartel monopolies distorted early currency systems.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>&ldquo;Scarlet coats take the state&rdquo;</strong><div style='color:#94a3b8;font-size:10.5px;'>Define the Rum Rebellion as an economic coup d etat.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>&ldquo;Fleece expands across the soil&rdquo;</strong><div style='color:#94a3b8;font-size:10.5px;'>Map pastoral land grabs to First Nations displacement.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>&ldquo;The Governor locked in chains&rdquo;</strong><div style='color:#94a3b8;font-size:10.5px;'>Contrast naval executive command against local merchant capital.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>&ldquo;Seventy-third disembarks the bay&rdquo;</strong><div style='color:#94a3b8;font-size:10.5px;'>Trace Macquarie arrival to the birth of civil institutions.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>&ldquo;Fiefdom bows to statute law&rdquo;</strong><div style='color:#94a3b8;font-size:10.5px;'>Synthesize the transition from military monopoly to governance.</div></div></div>
+      <div class="stance-text">
+        "Death or Liberty! The green harp flies. Parramatta falls tonight, and the French fleet shall see Sydney freed from this corporal's garrison."
+      </div>
+    </div>
+
+    <div class="stance-card reg">
+      <div class="stance-badge">
+        <span>2. Reg // Newcastle English</span>
+        <span>Slang-Scaffold</span>
+      </div>
+      <div class="stance-text">
+        "These blokes weren't just petty crooks having a whinge. They were hardened 1798 political rebels who copped twenty-five lashes on empty bellies and decided the whole military cartel was getting tipped over."
       </div>
     </div>
   </div>
 </div>
 
-<script>
-const PINS = [{"id": 1, "num": "01", "name": "Castle Hill Convict Barracks", "loc": "Castle Hill Farm", "x": 28, "y": 34, "kw": ["kw-castle-hill"], "fact": "Over 300 convicts, predominantly Irish political transportees from the 1798 uprising, broke out of the Government Agricultural Farm at Castle Hill on March 4, 1804.", "spk": "Philip Cunningham (Rebel Leader)", "quote": "Liberty or Death! The green harp flies. Parramatta falls tonight, and the French fleet shall see Sydney freed!", "reg": "These lads had copped twenty-five lashes too many on empty bellies and decided the whole penal colony was getting kicked over.", "edw": "Deploy this as your opening counter-thesis: Castle Hill proves convict resistance was an organized ideological revolt against an unchecked military administration, not common crime.", "music": "alarm"}, {"id": 2, "num": "02", "name": "Parramatta Military Outpost", "loc": "Parramatta Barracks", "x": 45, "y": 48, "kw": ["kw-castle-hill", "kw-cartels"], "fact": "Major George Johnston rode through the night from Sydney to Parramatta, covering 24 km in under 4 hours to mobilize troops and loyalist civilians.", "spk": "Major George Johnston (NSW Corps)", "quote": "Every officer and settler shall stand to arms before dawn. Parramatta must not burn.", "reg": "Johnston bolted down the dark bush track like lightning on horseback to muster his redcoats before the armoury was overrun.", "edw": "Cite Johnston's rapid mobilization to prove the colony lacked civil policing institutions\u2014the Crown relied entirely on garrison military power to maintain societal order.", "music": "cavalry"}, {"id": 3, "num": "03", "name": "Rouse Hill Battleground", "loc": "Windsor Road Ridge", "x": 35, "y": 42, "kw": ["kw-castle-hill", "kw-martial-law"], "fact": "Philip Cunningham approached under a flag of truce at Rouse Hill; he was unceremoniously seized and summarily hanged at Hawkesbury without a court trial.", "spk": "Father James Dixon (Eyewitness Priest)", "quote": "Cunningham stepped forward with a white handkerchief to parley. Before words could be traded, pistols were drawn and the line broke into slaughter.", "reg": "Cunningham walked up waving a white flag to talk peace, and the army nabbed him on the spot. Absolute dog act breaking every rule.", "edw": "Highlight this breach of truce as key evidence for undermined governance: Johnston abandoned British common law due process in favour of martial expediency.", "music": "musket"}, {"id": 4, "num": "04", "name": "Hawkesbury Settlement", "loc": "Green Hills (Windsor)", "x": 20, "y": 24, "kw": ["kw-martial-law", "kw-civil-gov"], "fact": "The 1804 clash marked the first declaration of martial law in Australian history, enacted across Parramatta, Castle Hill, and the Hawkesbury basin.", "spk": "Magistrate Samuel Marsden", "quote": "Under martial law, the civil magistrate yields to the bayonet. Nine hang upon the gibbet so the populace may learn terror and obedience.", "reg": "First time martial law got pulled in Aussie history. No courts, no juries\u2014just a rope and a tree branch.", "edw": "Use King's martial decree to show the fragility of colonial law: governance collapsed into military dictatorship whenever the convict majority resisted.", "music": "martial"}, {"id": 5, "num": "05", "name": "Commissariat Spirit Store", "loc": "Sydney Cove Wharf", "x": 72, "y": 50, "kw": ["kw-cartels"], "fact": "The New South Wales Corps (nicknamed Rum Corps) controlled the import of spirits, inflating prices up to 400% as a captive barter currency.", "spk": "William Gore (Provost-Marshal)", "quote": "Rum is the sovereign master of Sydney. The officers buy the holds clean, while small settlers mortgage their grain harvests for a single keg of spirits.", "reg": "The officers ran a massive booze cartel. If you were a small farmer, you had to pay their bloated liquor prices or lose your farm.", "edw": "Connect economic extortion directly to the question: the military officers were not public servants; they operated an illegal commercial syndicate that cannibalized Crown authority.", "music": "tavern"}, {"id": 6, "num": "06", "name": "Camden Cowpastures", "loc": "Camden Pastoral Estate", "x": 22, "y": 75, "kw": ["kw-cartels", "kw-civil-gov"], "fact": "John Macarthur arrived with \u00a3497 in capital and used military access to accumulate over 10,000 acres at the Cowpastures (Camden) for merino breeding.", "spk": "Captain John Macarthur (Pastoral Syndicate)", "quote": "This continent was not claimed for naval post-captains to govern like quarterdecks. Merino wool shall clothe the Empire, and my title deeds shall remain untouchable.", "reg": "Macarthur rocked up with spare change and stitched up ten thousand acres of prime land using his army mates. He answered to nobody.", "edw": "Macarthur represents the privatization of the state: evaluate how private pastoral cartels subordinated the colonial governor's Crown directives.", "music": "wind"}, {"id": 7, "num": "07", "name": "Government House, Sydney", "loc": "Bridge Street Domain", "x": 78, "y": 44, "kw": ["kw-rum-rebellion", "kw-cartels", "kw-civil-gov"], "fact": "Governor William Bligh was arrested on January 26, 1808\u2014the 20th anniversary of the First Fleet landing\u2014when 400 soldiers of the NSW Corps marched on Government House.", "spk": "Mary Putland (Daughter of Governor Bligh)", "quote": "They marched with drums and fifes playing 'The British Grenadiers.' They stormed the study with drawn swords and placed the King's representative under armed arrest.", "reg": "Australia's only real military coup d'\u00e9tat. Four hundred armed redcoats marched on Government House and locked Governor Bligh up.", "edw": "This is your primary thesis anchor: the Rum Rebellion proves that when Crown civil policy clashed with officer corporate profits, the military overthrew the state.", "music": "fife_march"}, {"id": 8, "num": "08", "name": "Corps Junta Headquarters", "loc": "George Street Barracks", "x": 70, "y": 58, "kw": ["kw-rum-rebellion", "kw-civil-gov"], "fact": "The Corps rebel administration governed New South Wales illegally for nearly two years until the arrival of Lachlan Macquarie on December 28, 1809.", "spk": "Lieut-Colonel Joseph Foveaux (Acting Junta)", "quote": "Order is maintained without the naval tyrant. Our military committee upholds commerce and guarantees stability across New South Wales.", "reg": "The army officers ran Sydney like their own boys' club for two years straight because news took six months just to sail back to Whitehall.", "edw": "Argue that the two-year delay in British response illustrates imperial distance friction: military rule entrenched itself before London could react.", "music": "gavel"}, {"id": 9, "num": "09", "name": "Sydney Harbour (Port Jackson)", "loc": "Sydney Cove Anchorage", "x": 86, "y": 34, "kw": ["kw-civil-gov"], "fact": "Major George Johnston was subsequently court-martialed at Chelsea Hospital in London in 1811 and cashiered (dismissed) from the British Army.", "spk": "Governor Lachlan Macquarie", "quote": "I assume the government of this territory. The New South Wales Corps is ordered home to Britain. The reign of private faction is at an end.", "reg": "Macquarie pulls into Sydney Harbour with his own battle-hardened Scots regiment and tells the Rum Corps their racket is permanently done. Pack your trunks.", "edw": "Contrast Macquarie's arrival against the rebellion: Crown sovereignty could only be restored by physically removing the corrupt garrison and introducing external imperial troops.", "music": "fanfare"}, {"id": 10, "num": "10", "name": "Statutory Court & Bank of NSW", "loc": "Macquarie Street Legal Precinct", "x": 76, "y": 64, "kw": ["kw-civil-gov", "kw-martial-law"], "fact": "The 1808 rebellion forced the British Colonial Office to abandon military administration and assign regular British regiments to enforce statutory oversight.", "spk": "Ellis Bent (First Civilian Judge-Advocate)", "quote": "The era of sword-rule is concluded. Independent courts, civil jurisprudence, and sound legal currency now safeguard the rule of law.", "reg": "The big exam punchline: London finally realized that letting soldiers run the bank, the court, and the farm ended in disaster, so they built proper legal institutions.", "edw": "Conclude your essay with this synthesis: the failure of military governance compelled the British state to construct durable, independent civil institutions.", "music": "echo"}];
-let activePinId = null;
-let audioCtx = null;
-let currentNodes = [];
-let masterGain = null;
+<div class="kinetic-dock">
+  <div class="totem-anchor">
+    <div class="totem-icon">⚓</div>
+    <div><strong>Kinetic Anchor:</strong> The Rusted Handcuff Key (Monopoly Control)</div>
+  </div>
+  <button class="analogy-btn" onclick="alert('Reg's Analogy: Think of the NSW Corps like a private security company that bought out all the food trucks, printed their own Monopoly money, and arrested the principal when he tried to audit their books.')">Reg's Analogy Button</button>
+</div>
 
-function initPins() {
-  const container = document.getElementById('pins-container');
-  container.innerHTML = '';
-  PINS.forEach(p => {
-    const el = document.createElement('div');
-    el.className = 'pin-marker';
-    el.id = `pin-${p.id}`;
-    el.style.left = `${p.x}%`;
-    el.style.top = `${p.y}%`;
-    el.innerHTML = `
-      <div class="pin-beacon"></div>
-      <div class="pin-badge">${p.num}</div>
-      <div class="pin-caption">${p.name}</div>
-    `;
-    el.onclick = (e) => { e.stopPropagation(); selectPin(p.id); };
-    container.appendChild(el);
-  });
-}
-
-function selectPin(id) {
-  const pin = PINS.find(p => p.id === id);
-  if (!pin) return;
-  activePinId = id;
-  document.querySelectorAll('.pin-marker').forEach(m => m.classList.remove('active-pin'));
-  const pinEl = document.getElementById(`pin-${id}`);
-  if (pinEl) pinEl.classList.add('active-pin');
-  document.querySelectorAll('.hw-kw').forEach(kw => kw.classList.remove('active-highlight'));
-  pin.kw.forEach(kwId => {
-    const kwEl = document.getElementById(kwId);
-    if (kwEl) kwEl.classList.add('active-highlight');
-  });
-  drawTacticalChainLink(pinEl, pin.kw);
-  document.getElementById('d-title').textContent = `${pin.num} // ${pin.name}`;
-  document.getElementById('d-loc').textContent = pin.loc;
-  document.getElementById('d-fact').textContent = pin.fact;
-  document.getElementById('d-spk').textContent = pin.spk;
-  document.getElementById('d-quote').textContent = `&ldquo;${pin.quote}&rdquo;`;
-  document.getElementById('d-reg').textContent = pin.reg;
-  document.getElementById('d-edw').textContent = pin.edw;
-  document.getElementById('hud-drawer').style.display = 'flex';
-  startGentleAtmosphere(pin.music);
-  playFullVoiceSequence();
-}
-
-function drawTacticalChainLink(pinEl, keywords) {
-  const svg = document.getElementById('laser-svg');
-  if (!pinEl || !keywords.length) { svg.innerHTML = ''; return; }
-  const pinRect = pinEl.getBoundingClientRect();
-  const px = pinRect.left + pinRect.width / 2;
-  const py = pinRect.top + 8;
-  const targetEl = document.getElementById(keywords[0]);
-  if (!targetEl) return;
-  const tr = targetEl.getBoundingClientRect();
-  const tx = tr.left + tr.width / 2;
-  const ty = tr.bottom + 2;
-  svg.innerHTML = `
-    <defs>
-      <linearGradient id="chainGrad" x1="${px}" y1="${py}" x2="${tx}" y2="${ty}" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.95"/>
-        <stop offset="60%" stop-color="#38bdf8" stop-opacity="0.85"/>
-        <stop offset="100%" stop-color="#10b981" stop-opacity="1"/>
-      </linearGradient>
-    </defs>
-    <path d="M ${px} ${py} Q ${(px+tx)/2} ${(py+ty)/2 - 35} ${tx} ${ty}" fill="none" stroke="rgba(245, 158, 11, 0.25)" stroke-width="8" stroke-linecap="round"/>
-    <path d="M ${px} ${py} Q ${(px+tx)/2} ${(py+ty)/2 - 35} ${tx} ${ty}" fill="none" stroke="url(#chainGrad)" stroke-width="3" stroke-dasharray="8,6"/>
-    <circle cx="${px}" cy="${py}" r="6" fill="#f59e0b" stroke="#ffffff" stroke-width="2"/>
-    <circle cx="${tx}" cy="${ty}" r="6" fill="#10b981" stroke="#ffffff" stroke-width="2"/>
-  `;
-}
-
-function closeDrawer() {
-  document.getElementById('hud-drawer').style.display = 'none';
-  document.querySelectorAll('.pin-marker').forEach(m => m.classList.remove('active-pin'));
-  document.querySelectorAll('.hw-kw').forEach(kw => kw.classList.remove('active-highlight'));
-  document.getElementById('laser-svg').innerHTML = '';
-  stopAllAudio();
-}
-
-function toggleModal(id) {
-  const m = document.getElementById(id);
-  m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-}
-
-function getAudioCtx() {
-  if (!audioCtx) {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    audioCtx = new AudioContext();
-  }
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  return audioCtx;
-}
-
-function startGentleAtmosphere(type) {
-  stopSoundscape();
-  try {
-    const ctx = getAudioCtx();
-    masterGain = ctx.createGain();
-    masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
-    masterGain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.3);
-    masterGain.connect(ctx.destination);
-    const bufferSize = ctx.sampleRate * 2;
-    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const output = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
-    const whiteNoise = ctx.createBufferSource();
-    whiteNoise.buffer = noiseBuffer;
-    whiteNoise.loop = true;
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(260, ctx.currentTime);
-    whiteNoise.connect(filter);
-    filter.connect(masterGain);
-    whiteNoise.start();
-    currentNodes.push(whiteNoise);
-
-    if (type === 'fife_march' || type === 'cavalry') {
-      const now = ctx.currentTime;
-      [587.33, 739.99, 880].forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const g = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.4);
-        g.gain.setValueAtTime(0.04, now + idx * 0.4);
-        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.4 + 0.38);
-        osc.connect(g);
-        g.connect(masterGain);
-        osc.start(now + idx * 0.4);
-        osc.stop(now + idx * 0.4 + 0.4);
-        currentNodes.push(osc);
-      });
-    }
-    setWaveAnim(true);
-  } catch(e) {}
-}
-
-function stopSoundscape() {
-  if (masterGain && audioCtx) {
-    try {
-      masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-      masterGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.05);
-    } catch(e) {}
-  }
-  currentNodes.forEach(n => { try { n.stop(); n.disconnect(); } catch(e) {} });
-  currentNodes = [];
-  setWaveAnim(false);
-}
-
-function stopAllAudio() {
-  stopSoundscape();
-  window.speechSynthesis.cancel();
-  clearSpeakerHighlights();
-}
-
-function setWaveAnim(active) {
-  document.querySelectorAll('.wave-bar').forEach(b => {
-    if (active) b.classList.add('playing'); else b.classList.remove('playing');
-  });
-}
-
-function clearSpeakerHighlights() {
-  document.querySelectorAll('.card-speaker').forEach(c => c.classList.remove('active-talking'));
-}
-
-function playFullVoiceSequence() {
-  const pin = PINS.find(p => p.id === activePinId);
-  if (!pin || !('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
-  clearSpeakerHighlights();
-
-  const u1 = new SpeechSynthesisUtterance(pin.quote);
-  u1.rate = 0.92; u1.pitch = 0.9;
-  u1.onstart = () => { clearSpeakerHighlights(); document.getElementById('card-eyewitness').classList.add('active-talking'); };
-
-  const u2 = new SpeechSynthesisUtterance("Reg here: " + pin.reg);
-  u2.rate = 1.05; u2.pitch = 1.12;
-  u2.onstart = () => { clearSpeakerHighlights(); document.getElementById('card-reg').classList.add('active-talking'); };
-
-  const u3 = new SpeechSynthesisUtterance("Avatar Edwina's essay strategy: " + pin.edw);
-  u3.rate = 0.95; u3.pitch = 1.0;
-  u3.onstart = () => { clearSpeakerHighlights(); document.getElementById('card-edwina').classList.add('active-talking'); };
-  u3.onend = () => clearSpeakerHighlights();
-
-  u1.onend = () => window.speechSynthesis.speak(u2);
-  u2.onend = () => window.speechSynthesis.speak(u3);
-  window.speechSynthesis.speak(u1);
-}
-
-function playSingleSpeaker(who) {
-  const pin = PINS.find(p => p.id === activePinId);
-  if (!pin || !('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
-  clearSpeakerHighlights();
-  let text = "", rate = 1.0, pitch = 1.0;
-  if (who === 'eyewitness') { text = pin.quote; rate = 0.92; pitch = 0.9; document.getElementById('card-eyewitness').classList.add('active-talking'); }
-  else if (who === 'reg') { text = "Reg here: " + pin.reg; rate = 1.05; pitch = 1.12; document.getElementById('card-reg').classList.add('active-talking'); }
-  else if (who === 'edwina') { text = "Avatar Edwina: " + pin.edw; rate = 0.95; pitch = 1.0; document.getElementById('card-edwina').classList.add('active-talking'); }
-  const u = new SpeechSynthesisUtterance(text);
-  u.rate = rate; u.pitch = pitch;
-  u.onend = () => clearSpeakerHighlights();
-  window.speechSynthesis.speak(u);
-}
-
-window.addEventListener('resize', () => {
-  if (activePinId) {
-    const pin = PINS.find(p => p.id === activePinId);
-    const pinEl = document.getElementById(`pin-${activePinId}`);
-    if (pin && pinEl) drawTacticalChainLink(pinEl, pin.kw);
-  }
-});
-
-document.addEventListener('DOMContentLoaded', initPins);
-</script>
 </body>
 </html>
