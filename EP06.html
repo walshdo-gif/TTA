@@ -2,298 +2,676 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Australian History - EP06 // Tactical Mission Canvas</title>
 <style>
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #020712; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden; user-select: none; }
-.top-hud { position: absolute; top: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(2, 6, 18, 0.98) 0%, rgba(2, 6, 18, 0.92) 80%, rgba(2, 6, 18, 0) 100%); backdrop-filter: blur(14px); z-index: 100; padding: 10px 18px 8px; display: flex; flex-direction: column; gap: 6px; border-bottom: 1.5px solid rgba(56, 189, 248, 0.25); box-shadow: 0 4px 30px rgba(0,0,0,0.8); }
-.hud-bar { display: flex; align-items: center; justify-content: space-between; }
-.hud-pills { display: flex; align-items: center; gap: 8px; }
-.pill-curriculum { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1.5px solid rgba(56, 189, 248, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; }
-.pill-ep { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1.5px solid rgba(245, 158, 11, 0.45); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 800; }
-.hud-buttons { display: flex; align-items: center; gap: 8px; }
-.btn-nav { background: #0f172a; border: 1.5px solid #38bdf8; color: #38bdf8; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 12px rgba(56, 189, 248, 0.25); transition: all 0.2s; }
-.btn-nav:hover, .btn-nav:active { background: #0284c7; color: #ffffff; }
-.btn-green { border-color: #10b981; color: #10b981; box-shadow: 0 0 12px rgba(16, 185, 129, 0.25); }
-.btn-green:hover, .btn-green:active { background: #059669; color: #ffffff; }
-.hw-container { background: rgba(15, 23, 42, 0.92); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 8px; padding: 8px 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
-.hw-header { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; font-size: 10.5px; font-weight: 900; letter-spacing: 1px; color: #94a3b8; text-transform: uppercase; }
-.hw-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulse-ring 1.8s infinite; }
-@keyframes pulse-ring { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
-.hw-question { font-size: 15px; line-height: 1.45; color: #f1f5f9; font-weight: 600; }
-.hw-kw { padding: 2px 6px; border-radius: 4px; transition: all 0.3s ease; border-bottom: 2px dashed rgba(148, 163, 184, 0.6); }
-.hw-kw.active-highlight { background: rgba(245, 158, 11, 0.35); color: #fef08a; border-bottom: 2.5px solid #f59e0b; font-weight: 800; box-shadow: 0 0 16px rgba(245, 158, 11, 0.6); text-shadow: 0 0 8px rgba(245, 158, 11, 0.7); }
-.map-viewport { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background: #020712; overflow: hidden; }
-#tactical-map { width: 100%; height: 100%; display: block; }
-.sea-base { fill: #040d1f; }
-.rhumb-line { stroke: rgba(56, 189, 248, 0.1); stroke-width: 0.8; stroke-dasharray: 4, 10; }
-.landmass { fill: #0c1a33; stroke: #38bdf8; stroke-width: 2.5; filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.35)); }
-.terrain-relief { fill: none; stroke: rgba(245, 158, 11, 0.15); stroke-width: 1.5; }
-.river-stroke { fill: none; stroke: #0284c7; stroke-linecap: round; stroke-linejoin: round; }
-.historic-road { fill: none; stroke: #f59e0b; stroke-width: 2.8; stroke-dasharray: 6, 5; filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5)); }
-.map-cartouche { fill: rgba(11, 19, 38, 0.85); stroke: rgba(56, 189, 248, 0.4); stroke-width: 1.5; }
-#laser-svg { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 105; }
-.pin-marker { position: absolute; transform: translate(-50%, -50%); cursor: pointer; z-index: 80; display: flex; flex-direction: column; align-items: center; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+html, body {
+  margin: 0; padding: 0; width: 100%; height: 100%;
+  background: #020617; color: #f1f5f9;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden; user-select: none;
+}
+
+/* Top HUD Header */
+.top-hud {
+  position: absolute; top: 0; left: 0; right: 0; height: 135px;
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.98) 0%, rgba(2, 6, 23, 0.88) 85%, transparent 100%);
+  backdrop-filter: blur(12px); z-index: 100;
+  padding: 10px 18px 0; display: flex; flex-direction: column;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+}
+.hud-controls {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
+}
+.hud-btn-group { display: flex; align-items: center; gap: 8px; }
+.badge-pill {
+  background: rgba(56, 189, 248, 0.12); color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3); padding: 3px 8px;
+  border-radius: 4px; font-size: 10px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase;
+}
+.badge-ep {
+  background: rgba(245, 158, 11, 0.15); color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.35); padding: 3px 8px;
+  border-radius: 4px; font-size: 10px; font-weight: 800;
+}
+.btn-tactical {
+  background: rgba(15, 23, 42, 0.85); border: 1.5px solid #38bdf8; color: #38bdf8;
+  padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; gap: 6px;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); transition: all 0.2s;
+}
+.btn-tactical:hover, .btn-tactical:active { background: #0284c7; color: #fff; }
+.btn-green {
+  border-color: #10b981; color: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+.btn-green:hover, .btn-green:active { background: #059669; color: #fff; }
+
+/* Homework Question Strategy Bar */
+.hw-box {
+  background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 8px; padding: 8px 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.hw-label {
+  font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #94a3b8;
+  display: flex; align-items: center; gap: 6px; margin-bottom: 3px; text-transform: uppercase;
+}
+.pulse-indicator {
+  width: 7px; height: 7px; border-radius: 50%; background: #10b981;
+  box-shadow: 0 0 8px #10b981; animation: blink 1.8s infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.8); } }
+.hw-text {
+  font-size: 13px; line-height: 1.4; color: #e2e8f0; font-weight: 500;
+}
+.hw-kw {
+  padding: 1px 4px; border-radius: 3px; transition: all 0.3s ease;
+  border-bottom: 1.5px dashed rgba(148, 163, 184, 0.5);
+}
+.hw-kw.active-highlight {
+  background: rgba(245, 158, 11, 0.25); color: #fbbf24;
+  border-bottom: 2px solid #f59e0b; font-weight: 700;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
+  text-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
+}
+
+/* Map Canvas Container */
+.map-viewport {
+  position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #020617; overflow: hidden;
+}
+#tactical-map {
+  width: 100%; height: 100%; display: block;
+}
+
+/* Dynamic Laser SVG for Link Highlights */
+#laser-svg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 90;
+}
+
+/* Tactical Pins */
+.pin-marker {
+  position: absolute; transform: translate(-50%, -50%);
+  cursor: pointer; z-index: 80; display: flex; flex-direction: column;
+  align-items: center; transition: transform 0.2s ease;
+}
 .pin-marker:active { transform: translate(-50%, -50%) scale(0.92); }
-.pin-marker.active-pin { z-index: 98; }
-.pin-beacon { position: absolute; width: 46px; height: 46px; border-radius: 50%; border: 2px solid #38bdf8; background: rgba(56, 189, 248, 0.22); animation: beacon-ping 2s infinite ease-out; }
-@keyframes beacon-ping { 0% { transform: scale(0.35); opacity: 1; } 100% { transform: scale(2.2); opacity: 0; } }
-.pin-badge { width: 36px; height: 36px; border-radius: 50%; background: #091326; border: 2.5px solid #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 13.5px; font-weight: 900; color: #38bdf8; box-shadow: 0 0 18px rgba(56, 189, 248, 0.7); position: relative; z-index: 2; transition: all 0.25s; }
-.pin-marker.active-pin .pin-badge { background: #f59e0b; border-color: #ffffff; color: #020617; transform: scale(1.3); box-shadow: 0 0 25px #f59e0b, 0 0 45px rgba(245, 158, 11, 0.85); }
-.pin-caption { margin-top: 6px; background: rgba(11, 19, 38, 0.95); border: 1.5px solid rgba(56, 189, 248, 0.4); color: #f1f5f9; font-size: 12px; font-weight: 800; padding: 4px 9px; border-radius: 6px; white-space: nowrap; pointer-events: none; box-shadow: 0 4px 14px rgba(0,0,0,0.8); }
-.pin-marker.active-pin .pin-caption { border-color: #f59e0b; color: #fef08a; background: #070e1e; }
-.hud-side-drawer { position: fixed; top: 140px; right: 18px; bottom: 18px; width: 440px; max-width: calc(100vw - 36px); background: rgba(9, 15, 30, 0.98); border: 2px solid #38bdf8; border-radius: 14px; padding: 16px 18px; box-shadow: -10px 10px 45px rgba(0,0,0,0.9), 0 0 30px rgba(56, 189, 248, 0.35); backdrop-filter: blur(18px); z-index: 120; display: none; flex-direction: column; overflow-y: auto; animation: slideDrawer 0.28s cubic-bezier(0.16, 1, 0.3, 1); }
-@keyframes slideDrawer { from { transform: translateX(120px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-.drawer-header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1.5px solid #1e293b; padding-bottom: 10px; margin-bottom: 12px; }
-.drawer-title { font-size: 17px; font-weight: 900; color: #f8fafc; letter-spacing: 0.5px; }
-.drawer-loc { font-size: 11.5px; color: #38bdf8; font-weight: 800; text-transform: uppercase; margin-top: 3px; }
-.btn-close-drawer { background: rgba(30, 41, 59, 0.85); border: 1.5px solid #475569; color: #94a3b8; font-size: 22px; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
-.btn-close-drawer:hover, .btn-close-drawer:active { color: #f8fafc; background: #dc2626; border-color: #ef4444; }
-.drawer-fact { font-size: 14px; line-height: 1.5; color: #e2e8f0; margin-bottom: 12px; background: rgba(15, 23, 42, 0.7); padding: 10px 12px; border-radius: 8px; border: 1px solid #1e293b; }
-.briefing-control-bar { display: flex; align-items: center; justify-content: space-between; background: rgba(15, 23, 42, 0.9); border: 1.5px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; }
-.btn-play-sequence { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 12px rgba(2, 132, 199, 0.5); }
-.sound-status { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: #38bdf8; }
-.sound-wave { display: flex; align-items: flex-end; gap: 2px; height: 14px; }
-.wave-bar { width: 3px; height: 3px; background: #38bdf8; border-radius: 1px; }
-.wave-bar.playing { animation: wavePulse 0.5s infinite alternate ease-in-out; }
-.wave-bar:nth-child(2) { animation-delay: 0.1s; }
-.wave-bar:nth-child(3) { animation-delay: 0.25s; }
-.wave-bar:nth-child(4) { animation-delay: 0.15s; }
-@keyframes wavePulse { 0% { height: 3px; } 100% { height: 14px; } }
-.card-speaker { border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; transition: all 0.3s ease; }
-.card-speaker.active-talking { transform: scale(1.02); box-shadow: 0 0 18px currentColor; }
-.eyewitness-card { background: rgba(56, 189, 248, 0.08); border-left: 4px solid #38bdf8; color: #38bdf8; }
-.reg-card { background: rgba(16, 185, 129, 0.08); border-left: 4px solid #10b981; color: #10b981; }
-.edwina-card { background: rgba(245, 158, 11, 0.08); border-left: 4px solid #f59e0b; color: #f59e0b; }
-.speaker-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-.speaker-title-group { display: flex; align-items: center; gap: 6px; }
-.speaker-badge { font-size: 9.5px; font-weight: 900; letter-spacing: 0.8px; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; color: #020617; }
-.badge-eyewitness { background: #38bdf8; }
-.badge-reg { background: #10b981; }
-.badge-edwina { background: #f59e0b; }
-.speaker-name { font-size: 12px; font-weight: 800; color: #f1f5f9; }
-.btn-single-voice { background: rgba(255, 255, 255, 0.08); border: 1px solid currentColor; color: inherit; padding: 3px 8px; border-radius: 4px; font-size: 10.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; }
-.speaker-quote-text { font-size: 13.5px; line-height: 1.45; color: #cbd5e1; margin: 0; }
-.italic-quote { font-style: italic; color: #e2e8f0; }
-.modal-overlay { position: fixed; inset: 0; background: rgba(2, 6, 18, 0.94); backdrop-filter: blur(14px); z-index: 250; display: none; align-items: center; justify-content: center; padding: 20px; }
-.modal-card { background: #091326; border: 2px solid #1e293b; border-radius: 14px; max-width: 860px; width: 100%; max-height: 88vh; overflow-y: auto; padding: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(56, 189, 248, 0.25); }
-.modal-header-row { display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid #1e293b; padding-bottom: 12px; margin-bottom: 16px; }
-.modal-header-row h3 { margin: 0 0 0 10px; font-size: 16px; color: #f8fafc; font-weight: 900; flex: 1; }
+.pin-marker.active-pin { z-index: 95; }
+.pin-pulse {
+  position: absolute; width: 36px; height: 36px; border-radius: 50%;
+  border: 1.5px solid #38bdf8; background: rgba(56, 189, 248, 0.15);
+  animation: radar-sweep 2.2s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes radar-sweep {
+  0% { transform: scale(0.4); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.pin-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #0f172a; border: 2px solid #38bdf8;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6), inset 0 0 6px rgba(56, 189, 248, 0.3);
+  position: relative; z-index: 2; transition: all 0.25s;
+}
+.pin-marker.active-pin .pin-icon {
+  background: #f59e0b; border-color: #fff; color: #020617;
+  transform: scale(1.25);
+  box-shadow: 0 0 20px #f59e0b, 0 0 35px rgba(245, 158, 11, 0.7);
+}
+.pin-tag {
+  margin-top: 4px; background: rgba(15, 23, 42, 0.92); border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #cbd5e1; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px;
+  white-space: nowrap; pointer-events: none; box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+.pin-marker.active-pin .pin-tag {
+  border-color: #f59e0b; color: #fbbf24; background: rgba(15, 23, 42, 0.98);
+}
+
+/* Dialogue / Evidence Bag Card */
+.evidence-card {
+  position: absolute; bottom: 20px; left: 20px; right: 20px; max-width: 620px;
+  margin: 0 auto; background: rgba(11, 17, 32, 0.95);
+  border: 1.5px solid #38bdf8; border-radius: 12px;
+  padding: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 25px rgba(56, 189, 248, 0.25);
+  backdrop-filter: blur(14px); z-index: 120;
+  display: none; animation: slideUp 0.25s ease-out;
+}
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.evidence-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  border-bottom: 1px solid #1e293b; padding-bottom: 8px; margin-bottom: 10px;
+}
+.evidence-title {
+  font-size: 14px; font-weight: 800; color: #f8fafc; letter-spacing: 0.5px;
+}
+.evidence-loc {
+  font-size: 10px; color: #38bdf8; font-weight: 700; text-transform: uppercase; margin-top: 2px;
+}
+.close-card-btn {
+  background: transparent; border: none; color: #64748b; font-size: 20px;
+  cursor: pointer; padding: 0 4px; line-height: 1;
+}
+.close-card-btn:hover { color: #f1f5f9; }
+.evidence-fact {
+  font-size: 12px; line-height: 1.45; color: #e2e8f0; margin-bottom: 10px;
+}
+.eyewitness-block {
+  background: rgba(15, 23, 42, 0.8); border-left: 3px solid #f59e0b;
+  padding: 8px 12px; border-radius: 4px; margin-bottom: 8px;
+}
+.speaker-title {
+  font-size: 10px; font-weight: 800; color: #f59e0b; text-transform: uppercase; margin-bottom: 2px;
+}
+.speaker-quote {
+  font-size: 11px; font-style: italic; color: #cbd5e1; line-height: 1.35;
+}
+.reg-block {
+  background: rgba(16, 185, 129, 0.08); border-left: 3px solid #10b981;
+  padding: 8px 12px; border-radius: 4px; margin-bottom: 12px;
+}
+.reg-title {
+  font-size: 10px; font-weight: 800; color: #10b981; text-transform: uppercase; margin-bottom: 2px;
+}
+.reg-text {
+  font-size: 11px; color: #cbd5e1; line-height: 1.35;
+}
+
+/* Audio Player Dock in Card */
+.audio-dock {
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(2, 6, 23, 0.85); border: 1px solid #1e293b;
+  padding: 8px 12px; border-radius: 8px; gap: 10px;
+}
+.audio-btn {
+  background: #0284c7; color: #fff; border: none; padding: 6px 12px;
+  border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+}
+.audio-btn:hover, .audio-btn:active { background: #0369a1; }
+.btn-soundscape {
+  background: #334155; color: #cbd5e1;
+}
+.btn-soundscape.playing {
+  background: #f59e0b; color: #020617; font-weight: 800; box-shadow: 0 0 12px #f59e0b;
+}
+.audio-visualizer {
+  display: flex; align-items: flex-end; gap: 3px; height: 18px; flex: 1; justify-content: center;
+}
+.viz-bar {
+  width: 3px; height: 4px; background: #38bdf8; border-radius: 2px;
+  transition: height 0.15s ease;
+}
+.viz-bar.active {
+  animation: eq-pulse 0.6s infinite alternate ease-in-out;
+}
+.viz-bar:nth-child(2) { animation-delay: 0.1s; }
+.viz-bar:nth-child(3) { animation-delay: 0.25s; }
+.viz-bar:nth-child(4) { animation-delay: 0.15s; }
+.viz-bar:nth-child(5) { animation-delay: 0.35s; }
+@keyframes eq-pulse { 0% { height: 4px; } 100% { height: 18px; } }
+
+/* Generic Modals for SitRep and Assets */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(2, 6, 23, 0.9);
+  backdrop-filter: blur(12px); z-index: 200; display: none;
+  align-items: center; justify-content: center; padding: 16px;
+}
+.modal-window {
+  background: #0b1120; border: 1.5px solid #1e293b; border-radius: 12px;
+  max-width: 820px; width: 100%; max-height: 88vh; overflow-y: auto;
+  padding: 22px; box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 25px rgba(56, 189, 248, 0.2);
+}
+.modal-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid #1e293b; padding-bottom: 12px; margin-bottom: 16px;
+}
+.modal-bar h3 { margin: 0 0 0 10px; font-size: 14px; color: #f8fafc; letter-spacing: 0.8px; flex: 1; }
 .facts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-.fact-item { background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 8px; padding: 12px; }
-.fact-item.full-width { grid-column: span 2; }
-.fact-item label { display: block; font-size: 10px; font-weight: 900; color: #64748b; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase; }
-.fact-item div { font-size: 13.5px; color: #e2e8f0; line-height: 1.4; }
-.tfcc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; border-top: 1.5px solid #1e293b; padding-top: 14px; }
-.tfcc-card { background: rgba(15, 23, 42, 0.6); border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px; }
-.tfcc-hdr { font-size: 10px; font-weight: 900; color: #38bdf8; margin-bottom: 4px; }
-.tfcc-body { font-size: 12px; color: #cbd5e1; line-height: 1.35; }
-@media (max-width: 900px) {
-  .top-hud { padding: 8px 12px; }
-  .hw-question { font-size: 13.5px; }
-  .hud-side-drawer { width: 360px; right: 10px; top: 155px; bottom: 10px; padding: 12px; }
+.fact-card { background: rgba(15, 23, 42, 0.75); border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px; }
+.fact-card.full-width { grid-column: span 2; }
+.fact-card label { display: block; font-size: 9px; font-weight: 800; color: #64748b; letter-spacing: 0.8px; margin-bottom: 3px; text-transform: uppercase; }
+.fact-card div { font-size: 12px; color: #e2e8f0; line-height: 1.35; }
+.tfcc-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; border-top: 1px solid #1e293b; padding-top: 14px; }
+.tfcc-col { background: rgba(15, 23, 42, 0.5); border: 1px solid #1e293b; border-radius: 6px; padding: 8px 10px; }
+.tfcc-title { font-size: 9px; font-weight: 800; color: #38bdf8; margin-bottom: 3px; }
+.tfcc-col div:last-child { font-size: 11px; color: #cbd5e1; line-height: 1.3; }
+@media (max-width: 768px) {
+  .top-hud { height: 160px; padding: 8px 12px 0; }
+  .hw-text { font-size: 11.5px; line-height: 1.35; }
+  .evidence-card { bottom: 10px; left: 10px; right: 10px; padding: 12px; }
   .facts-grid { grid-template-columns: 1fr; }
-  .fact-item.full-width { grid-column: span 1; }
-  .tfcc-grid { grid-template-columns: 1fr; }
+  .fact-card.full-width { grid-column: span 1; }
+  .tfcc-strip { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
+
+<!-- TOP HUD: Strategy Question & Navigation -->
 <div class="top-hud">
-  <div class="hud-bar">
-    <div class="hud-pills">
-      <span class="pill-curriculum">NESA Stage 5 History</span>
-      <span class="pill-ep">EP06 // 1804–1808</span>
+  <div class="hud-controls">
+    <div class="hud-btn-group">
+      <span class="badge-pill">NESA Stage 5 History</span>
+      <span class="badge-ep">EP06 // 1804–1808</span>
     </div>
-    <div class="hud-buttons">
-      <button class="btn-nav" onclick="toggleModal('sitrepModal')">Historic Facts // SitRep</button>
-      <button class="btn-nav btn-green" onclick="toggleModal('assetsModal')">Dossier (10+10)</button>
+    <div class="hud-btn-group">
+      <button class="btn-tactical" onclick="openModal('sitrepModal')">Historic Facts // SitRep</button>
+      <button class="btn-tactical btn-green" onclick="openModal('assetsModal')">Dossier (10+10)</button>
     </div>
   </div>
-  <div class="hw-container">
-    <div class="hw-header">
-      <span class="hw-dot"></span>
-      <span>Mission Map Strategy • High School Homework Question</span>
+
+  <div class="hw-box" id="hw-box">
+    <div class="hw-label">
+      <span class="pulse-indicator"></span>
+      <span>Mission Map Strategy // Homework Question</span>
     </div>
-    <div class="hw-question">
+    <div class="hw-text">
       To what extent did the <span id="kw-castle-hill" class="hw-kw">Castle Hill Convict Rebellion (1804)</span> and the <span id="kw-rum-rebellion" class="hw-kw">Rum Rebellion (1808)</span> demonstrate that <span id="kw-cartels" class="hw-kw">military cartels</span> and <span id="kw-martial-law" class="hw-kw">martial law</span> undermined <span id="kw-civil-gov" class="hw-kw">British civil governance</span> in early colonial New South Wales?
     </div>
   </div>
 </div>
 
+<!-- BASELOAD TACTICAL MAP CANVAS -->
 <div class="map-viewport">
   <svg id="tactical-map" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <rect class="sea-base" width="1000" height="700"/>
-    <g class="rhumb-line">
-      <line x1="880" y1="320" x2="0" y2="100"/>
-      <line x1="880" y1="320" x2="0" y2="500"/>
-      <line x1="880" y1="320" x2="500" y2="700"/>
-      <line x1="880" y1="320" x2="300" y2="0"/>
-      <line x1="880" y1="320" x2="1000" y2="600"/>
-      <line x1="880" y1="320" x2="1000" y2="120"/>
+    <defs>
+      <radialGradient id="waterGrad" cx="50%" cy="50%" r="70%">
+        <stop offset="0%" stop-color="#091426"/>
+        <stop offset="100%" stop-color="#020617"/>
+      </radialGradient>
+      <linearGradient id="gridGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="rgba(56,189,248,0.06)"/>
+        <stop offset="100%" stop-color="rgba(56,189,248,0.02)"/>
+      </linearGradient>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <!-- Deep Terrain Background -->
+    <rect width="1000" height="700" fill="#040918"/>
+
+    <!-- Grid Lines -->
+    <g stroke="rgba(56,189,248,0.07)" stroke-width="0.8">
+      <line x1="100" y1="0" x2="100" y2="700"/><line x1="200" y1="0" x2="200" y2="700"/>
+      <line x1="300" y1="0" x2="300" y2="700"/><line x1="400" y1="0" x2="400" y2="700"/>
+      <line x1="500" y1="0" x2="500" y2="700"/><line x1="600" y1="0" x2="600" y2="700"/>
+      <line x1="700" y1="0" x2="700" y2="700"/><line x1="800" y1="0" x2="800" y2="700"/>
+      <line x1="900" y1="0" x2="900" y2="700"/>
+      <line x1="0" y1="100" x2="1000" y2="100"/><line x1="0" y1="200" x2="1000" y2="200"/>
+      <line x1="0" y1="300" x2="1000" y2="300"/><line x1="0" y1="400" x2="1000" y2="400"/>
+      <line x1="0" y1="500" x2="1000" y2="500"/><line x1="0" y1="600" x2="1000" y2="600"/>
     </g>
-    <path class="landmass" d="M 450 350 C 500 340 550 360 600 350 C 660 338 700 370 760 360 C 810 345 860 315 920 295 C 960 280 1000 305 1020 290 L 1020 400 L 900 400 C 850 380 800 400 750 390 C 700 380 650 410 580 400 C 520 390 480 370 450 350 Z"/>
-    <path class="landmass" d="M 120 700 C 140 580 170 500 150 380 C 130 280 190 180 210 160 C 250 130 300 140 330 100 C 360 60 400 30 460 10 L 520 10 C 460 60 410 120 370 170 C 330 220 280 280 250 350 C 220 420 210 520 190 700 Z"/>
-    <path class="landmass" d="M 720 560 C 760 540 820 560 870 610 C 900 650 940 660 1000 650 L 1000 700 L 700 700 C 700 650 710 600 720 560 Z"/>
-    <path class="river-stroke" d="M 130 700 C 150 580 180 500 160 380 C 140 280 200 180 220 160 C 260 130 310 140 340 100 C 370 60 410 30 460 10" stroke-width="5"/>
-    <path class="river-stroke" d="M 450 350 C 500 340 550 360 600 350 C 660 338 700 370 760 360 C 810 345 860 315 920 295 C 960 280 1000 305 1020 290" stroke-width="6"/>
-    <path class="terrain-relief" d="M 50 100 Q 180 250 110 460 T 70 680"/>
-    <path class="terrain-relief" d="M 90 80 Q 230 220 160 490 T 130 690"/>
-    <path class="terrain-relief" d="M 150 60 Q 300 200 220 530 T 190 700"/>
-    <path class="terrain-relief" d="M 300 50 Q 420 190 370 380 T 350 640"/>
-    <path class="historic-road" d="M 780 320 C 720 360 640 355 570 350 C 510 350 470 345 450 340"/>
-    <path class="historic-road" d="M 450 340 C 400 300 350 270 290 220 C 260 195 230 180 210 165"/>
-    <path class="historic-road" d="M 450 340 C 390 420 320 480 270 520 C 240 550 230 600 230 680"/>
-    <g transform="translate(930, 260) scale(0.65)" opacity="0.6">
-      <path d="M 10 30 C 25 35 45 35 60 30 L 55 42 C 40 45 20 45 15 42 Z" fill="#38bdf8"/>
-      <line x1="25" y1="30" x2="25" y2="8" stroke="#38bdf8" stroke-width="1.8"/>
-      <line x1="42" y1="30" x2="42" y2="5" stroke="#38bdf8" stroke-width="1.8"/>
-      <path d="M 25 10 Q 35 12 40 10 L 40 22 Q 32 24 25 22 Z" fill="rgba(56,189,248,0.3)" stroke="#38bdf8"/>
-      <text x="0" y="55" fill="rgba(56,189,248,0.7)" font-size="9" font-weight="800">HMS PORPOISE</text>
+
+    <!-- Topographic Contours (Cumberland Plain / Blue Mountains fringe) -->
+    <g fill="none" stroke="rgba(148,163,184,0.08)" stroke-width="1.2">
+      <path d="M 50 150 Q 180 280 120 480 T 80 680"/>
+      <path d="M 80 120 Q 240 250 170 510 T 140 690"/>
+      <path d="M 140 100 Q 300 230 230 550 T 200 700"/>
+      <path d="M 320 80 Q 420 220 380 400 T 360 620"/>
     </g>
-    <rect class="map-cartouche" x="30" y="145" width="230" height="50" rx="6"/>
-    <text x="42" y="165" fill="#f59e0b" font-size="10.5" font-weight="900" letter-spacing="1">CHART OF NEW SOUTH WALES</text>
-    <text x="42" y="182" fill="#94a3b8" font-size="9" font-weight="700">MILITARY JURISDICTION • 1804–1808</text>
-    <text x="210" y="135" class="map-label" font-size="12">HAWKESBURY AGRICULTURAL BASIN</text>
-    <text x="430" y="380" class="map-label" font-size="13">PARRAMATTA GARRISON</text>
-    <text x="790" y="270" class="map-label" font-size="14" fill="#38bdf8">PORT JACKSON // SYDNEY COVE</text>
-    <text x="750" y="600" class="map-label" font-size="12">BOTANY BAY ANCHORAGE</text>
-    <text x="170" y="650" class="map-label" font-size="12" fill="#f59e0b">COWPASTURES // MERINO RUNS</text>
-    <text x="280" y="260" fill="#f43f5e" font-size="11" font-weight="900" letter-spacing="1">CONVICT MARCH ON PARRAMATTA →</text>
-    <text x="520" y="380" fill="#f59e0b" font-size="11" font-weight="900" letter-spacing="1">← MAJOR JOHNSTON'S 24KM NIGHT MUSTER</text>
-    <g transform="translate(930, 610) scale(0.85)" opacity="0.65">
-      <circle cx="0" cy="0" r="34" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
-      <polygon points="0,-32 7,-8 0,0" fill="#38bdf8"/><polygon points="0,-32 -7,-8 0,0" fill="#0284c7"/>
-      <polygon points="0,32 7,8 0,0" fill="#64748b"/><polygon points="0,32 -7,8 0,0" fill="#334155"/>
-      <polygon points="32,0 8,7 0,0" fill="#64748b"/><polygon points="-32,0 -8,7 0,0" fill="#334155"/>
-      <text x="-5" y="-38" fill="#38bdf8" font-size="14" font-weight="900">N</text>
+
+    <!-- Major Waterways (Hawkesbury River, Parramatta River, Sydney Harbour, Botany Bay) -->
+    <path d="M 120 700 C 140 580 180 500 160 380 C 140 280 200 180 220 160 C 260 130 310 140 340 100 C 370 60 410 40 460 20"
+          fill="none" stroke="#0ea5e9" stroke-width="8" stroke-linecap="round" opacity="0.45"/>
+    <path d="M 120 700 C 140 580 180 500 160 380 C 140 280 200 180 220 160 C 260 130 310 140 340 100 C 370 60 410 40 460 20"
+          fill="none" stroke="#38bdf8" stroke-width="2.5" opacity="0.8"/>
+
+    <path d="M 460 340 C 500 335 540 350 580 345 C 640 338 680 365 730 355 C 770 345 810 320 870 300 C 920 285 960 310 1000 290"
+          fill="none" stroke="#0ea5e9" stroke-width="12" stroke-linecap="round" opacity="0.45"/>
+    <path d="M 460 340 C 500 335 540 350 580 345 C 640 338 680 365 730 355 C 770 345 810 320 870 300 C 920 285 960 310 1000 290"
+          fill="none" stroke="#38bdf8" stroke-width="3" opacity="0.8"/>
+
+    <path d="M 720 560 C 760 550 820 570 860 620 C 890 660 930 670 980 660"
+          fill="none" stroke="#0ea5e9" stroke-width="14" stroke-linecap="round" opacity="0.3"/>
+
+    <!-- Historic Colonial Roads -->
+    <path d="M 780 320 C 730 360 650 355 580 350 C 520 350 480 345 460 340"
+          fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-dasharray="5,4" opacity="0.75"/>
+    <path d="M 460 340 C 410 300 360 270 300 220 C 270 200 240 180 220 170"
+          fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-dasharray="5,4" opacity="0.75"/>
+    <path d="M 460 340 C 400 420 330 480 280 520 C 250 550 240 600 240 680"
+          fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="4,4" opacity="0.6"/>
+
+    <!-- Regional Tactical Labels -->
+    <text x="210" y="140" fill="rgba(56,189,248,0.6)" font-size="11" font-weight="800" letter-spacing="1">HAWKESBURY BASIN</text>
+    <text x="440" y="380" fill="rgba(56,189,248,0.7)" font-size="12" font-weight="800" letter-spacing="1.5">PARRAMATTA</text>
+    <text x="800" y="270" fill="rgba(56,189,248,0.8)" font-size="13" font-weight="900" letter-spacing="2">PORT JACKSON (SYDNEY)</text>
+    <text x="760" y="600" fill="rgba(148,163,184,0.4)" font-size="11" font-weight="700" letter-spacing="1">BOTANY BAY</text>
+    <text x="180" y="660" fill="rgba(245,158,11,0.6)" font-size="11" font-weight="800" letter-spacing="1">COWPASTURES (CAMDEN)</text>
+    <text x="280" y="270" fill="rgba(244,63,94,0.7)" font-size="10" font-weight="800" letter-spacing="0.8">CONVICT ESCAPE AXIS &rarr;</text>
+    <text x="540" y="380" fill="rgba(245,158,11,0.6)" font-size="10" font-weight="700" letter-spacing="0.8">&larr; JOHNSTON'S NIGHT RIDE (24 KM)</text>
+
+    <!-- Compass Rose -->
+    <g transform="translate(930, 620) scale(0.65)" opacity="0.55">
+      <circle cx="0" cy="0" r="30" fill="none" stroke="#38bdf8" stroke-width="1"/>
+      <polygon points="0,-28 6,-8 0,0" fill="#38bdf8"/>
+      <polygon points="0,-28 -6,-8 0,0" fill="#0284c7"/>
+      <polygon points="0,28 6,8 0,0" fill="#64748b"/>
+      <polygon points="0,28 -6,8 0,0" fill="#334155"/>
+      <polygon points="28,0 8,6 0,0" fill="#64748b"/>
+      <polygon points="-28,0 -8,6 0,0" fill="#334155"/>
+      <text x="-4" y="-34" fill="#38bdf8" font-size="12" font-weight="900">N</text>
     </g>
   </svg>
+
+  <!-- Dynamic Vector Ray SVG -->
+  <svg id="laser-svg"></svg>
+
+  <!-- 10 Floating Tactical Pins -->
   <div id="pins-container"></div>
 </div>
-<svg id="laser-svg"></svg>
 
-<div class="hud-side-drawer" id="hud-drawer">
-  <div class="drawer-header">
+<!-- EVIDENCE BAG / STANCE CARD -->
+<div class="evidence-card" id="evidence-card">
+  <div class="evidence-header">
     <div>
-      <div class="drawer-title" id="d-title">Pin Title</div>
-      <div class="drawer-loc" id="d-loc">Location</div>
+      <div class="evidence-title" id="card-title">Pin Title</div>
+      <div class="evidence-loc" id="card-loc">Location</div>
     </div>
-    <button class="btn-close-drawer" onclick="closeDrawer()">×</button>
+    <button class="close-card-btn" onclick="closeCard()">&times;</button>
   </div>
-  <div class="drawer-fact" id="d-fact">Fact goes here...</div>
-  <div class="briefing-control-bar">
-    <button class="btn-play-sequence" onclick="playFullVoiceSequence()">
-      <span>▶</span> <span>Play Full Briefing (1 • 2 • 3)</span>
+  <div class="evidence-fact" id="card-fact">Fact goes here...</div>
+  
+  <div class="eyewitness-block">
+    <div class="speaker-title" id="card-speaker">Eyewitness Voice</div>
+    <div class="speaker-quote" id="card-quote">"Quote goes here..."</div>
+  </div>
+
+  <div class="reg-block">
+    <div class="reg-title" id="card-reg-title">Reg (Newcastle Slang-Scaffold)</div>
+    <div class="reg-text" id="card-reg-text">Slang translation goes here...</div>
+  </div>
+
+  <div class="audio-dock">
+    <button class="audio-btn" id="btn-speak" onclick="playCurrentVoice()">
+      <span>&#9654;</span> <span id="btn-speak-label">Eyewitness Voice</span>
     </button>
-    <div class="sound-status">
-      <div class="sound-wave" id="sound-anim">
-        <div class="wave-bar"></div><div class="wave-bar"></div>
-        <div class="wave-bar"></div><div class="wave-bar"></div>
-      </div>
-      <span id="sound-label">Atmosphere Active</span>
+    <button class="audio-btn btn-soundscape" id="btn-sound" onclick="toggleCurrentSoundscape()">
+      <span>&#9835;</span> <span id="btn-sound-label">Atmosphere</span>
+    </button>
+    <div class="audio-visualizer">
+      <div class="viz-bar"></div><div class="viz-bar"></div>
+      <div class="viz-bar"></div><div class="viz-bar"></div><div class="viz-bar"></div>
     </div>
-  </div>
-  <div class="card-speaker eyewitness-card" id="card-eyewitness">
-    <div class="speaker-header">
-      <div class="speaker-title-group">
-        <span class="speaker-badge badge-eyewitness">1 • Eyewitness</span>
-        <span class="speaker-name" id="d-spk">Eyewitness Name</span>
-      </div>
-      <button class="btn-single-voice" onclick="playSingleSpeaker('eyewitness')">▶ Listen</button>
-    </div>
-    <p class="speaker-quote-text italic-quote" id="d-quote">"Quote goes here..."</p>
-  </div>
-  <div class="card-speaker reg-card" id="card-reg">
-    <div class="speaker-header">
-      <div class="speaker-title-group">
-        <span class="speaker-badge badge-reg">2 • Reg (Slang-Scaffold)</span>
-        <span class="speaker-name">Newcastle English</span>
-      </div>
-      <button class="btn-single-voice" onclick="playSingleSpeaker('reg')">▶ Listen</button>
-    </div>
-    <p class="speaker-quote-text" id="d-reg">Reg breakdown...</p>
-  </div>
-  <div class="card-speaker edwina-card" id="card-edwina">
-    <div class="speaker-header">
-      <div class="speaker-title-group">
-        <span class="speaker-badge badge-edwina">3 • Avatar Edwina</span>
-        <span class="speaker-name">Band 6 Sovereign Strategy</span>
-      </div>
-      <button class="btn-single-voice" onclick="playSingleSpeaker('edwina')">▶ Listen</button>
-    </div>
-    <p class="speaker-quote-text" id="d-edw">Edwina advice...</p>
   </div>
 </div>
 
-<div class="modal-overlay" id="sitrepModal" onclick="toggleModal('sitrepModal')">
-  <div class="modal-card" onclick="event.stopPropagation()">
-    <div class="modal-header-row">
-      <span class="pill-curriculum">TACTICAL SPEC-SHEET</span>
+<!-- SITREP MODAL -->
+<div class="modal-backdrop" id="sitrepModal" onclick="closeModal('sitrepModal')">
+  <div class="modal-window" onclick="event.stopPropagation()">
+    <div class="modal-bar">
+      <span class="badge-pill">TACTICAL SPEC-SHEET</span>
       <h3>EP06 // HISTORIC SITREP</h3>
-      <button class="btn-close-drawer" onclick="toggleModal('sitrepModal')">×</button>
+      <button class="close-card-btn" onclick="closeModal('sitrepModal')">&times;</button>
     </div>
     <div class="facts-grid">
-      <div class="fact-item"><label>OPERATIONAL DATE</label><div>March 4–5, 1804 (Castle Hill) & January 26, 1808 (Rum Rebellion)</div></div>
-      <div class="fact-item"><label>LOCATION</label><div>Castle Hill / Rouse Hill (Toongabbie) and Government House, Sydney</div></div>
-      <div class="fact-item"><label>AUTHORITY LEADER</label><div>Major George Johnston & Lieutenant-Governor William Paterson (NSW Corps)</div></div>
-      <div class="fact-item"><label>RESISTANCE LEADER</label><div>Philip Cunningham & William Johnston (Castle Hill); Governor William Bligh (1808)</div></div>
-      <div class="fact-item full-width"><label>HUMAN & POLITICAL TOLL</label><div><strong style="color:#38bdf8;">Authorities/Settlers:</strong> 0 fatal military casualties across both clashes  |  <strong style="color:#f43f5e;">Resistants:</strong> ~15 convicts killed in battle at Rouse Hill; 9 executed; 2 hanged in chains; Bligh placed under house arrest for over a year</div></div>
-      <div class="fact-item"><label>VICTOR</label><div style="color:#fbbf24; font-weight:800;">Major George Johnston & John Macarthur (NSW Corps cartel)</div></div>
-      <div class="fact-item"><label>SYSTEMIC CONSEQUENCE</label><div>Crown intervention ending private military trade monopolies; deployment of Macquarie in 1810 to establish institutional governance.</div></div>
+      <div class="fact-card"><label>OPERATIONAL DATE</label><div>March 4–5, 1804 (Castle Hill) & January 26, 1808 (Rum Rebellion)</div></div>
+      <div class="fact-card"><label>LOCATION</label><div>Castle Hill / Rouse Hill (Toongabbie) and Government House, Sydney</div></div>
+      <div class="fact-card"><label>AUTHORITY LEADER</label><div>Major George Johnston & Lieutenant-Governor William Paterson (NSW Corps)</div></div>
+      <div class="fact-card"><label>RESISTANCE LEADER</label><div>Philip Cunningham & William Johnston (Castle Hill); Governor William Bligh (1808)</div></div>
+      <div class="fact-card full-width"><label>HUMAN & POLITICAL TOLL</label><div><strong style="color:#38bdf8;">Authorities/Settlers:</strong> 0 fatal military casualties across both clashes &nbsp;|&nbsp; <strong style="color:#f43f5e;">Resistants:</strong> ~15 convicts killed in battle at Rouse Hill; 9 executed; 2 hanged in chains; Bligh placed under house arrest for over a year</div></div>
+      <div class="fact-card"><label>VICTOR</label><div style="color:#eab308; font-weight:600;">Major George Johnston & John Macarthur (NSW Corps cartel)</div></div>
+      <div class="fact-card"><label>SYSTEMIC CONSEQUENCE</label><div>Crown intervention ending private military trade monopolies; deployment of Macquarie in 1810 to establish institutional governance.</div></div>
     </div>
-    <div class="tfcc-grid">
-      <div class="tfcc-card"><div class="tfcc-hdr">1. TRIGGER</div><div class="tfcc-body">The suppression of the 1798 Irish Rebellion transporting United Irishmen to Sydney, intersecting with the NSW Corps monopoly over spirits and land barter.</div></div>
-      <div class="tfcc-card"><div class="tfcc-hdr">2. FORCES</div><div class="tfcc-body">Agrarian Irish republican insurgency and martial law vs. entrenched military mercantilism and private syndicate cartels under John Macarthur.</div></div>
-      <div class="tfcc-card"><div class="tfcc-hdr">3. COSTS</div><div class="tfcc-body">15 convicts executed at Castle Hill/Sydney; total subversion of Crown civil administration in the only military coup d etat on Australian soil.</div></div>
-      <div class="tfcc-card"><div class="tfcc-hdr">4. CONSEQUENCE</div><div class="tfcc-body">The recall of Governor William Bligh, the permanent dismantling and replacement of the NSW Corps by Governor Lachlan Macquarie s 73rd Regiment, and the formal transition from penal fiefdom to civil rule of law.</div></div>
+    <div class="tfcc-strip">
+      <div class="tfcc-col"><div class="tfcc-title">1. TRIGGER</div><div>The suppression of the 1798 Irish Rebellion transporting United Irishmen to Sydney, intersecting with the NSW Corps monopoly over spirits and land barter.</div></div>
+      <div class="tfcc-col"><div class="tfcc-title">2. FORCES</div><div>Agrarian Irish republican insurgency and martial law vs. entrenched military mercantilism and private syndicate cartels under John Macarthur.</div></div>
+      <div class="tfcc-col"><div class="tfcc-title">3. COSTS</div><div>15 convicts executed at Castle Hill/Sydney; total subversion of Crown civil administration in the only military coup d etat on Australian soil.</div></div>
+      <div class="tfcc-col"><div class="tfcc-title">4. CONSEQUENCE</div><div>The recall of Governor William Bligh, the permanent dismantling and replacement of the NSW Corps by Governor Lachlan Macquarie s 73rd Regiment, and the formal transition from penal fiefdom to civil rule of law.</div></div>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="assetsModal" onclick="toggleModal('assetsModal')">
-  <div class="modal-card" onclick="event.stopPropagation()">
-    <div class="modal-header-row">
-      <span class="pill-curriculum" style="border-color:#10b981; color:#10b981;">CURRICULUM ASSET DOSSIER</span>
+<!-- CURRICULUM ASSET DOSSIER MODAL -->
+<div class="modal-backdrop" id="assetsModal" onclick="closeModal('assetsModal')">
+  <div class="modal-window" onclick="event.stopPropagation()">
+    <div class="modal-bar">
+      <span class="badge-pill" style="border-color:#10b981; color:#10b981;">CURRICULUM ASSET DOSSIER</span>
       <h3>EP06 // 10 TALL FACTS & 10 LYRICAL LIFELINES</h3>
-      <button class="btn-close-drawer" onclick="toggleModal('assetsModal')">×</button>
+      <button class="close-card-btn" onclick="closeModal('assetsModal')">&times;</button>
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
       <div>
-        <h4 style="font-size:13px; color:#10b981; margin:0 0 12px; text-transform:uppercase; font-weight:900;">10 Tactical Tall Facts</h4>
-        <ol id="modal-tall-facts" style="padding-left:18px; margin:0; font-size:12.5px; color:#cbd5e1; line-height:1.5;"><li style='margin-bottom:8px;'>Over 300 convicts, predominantly Irish political transportees from the 1798 uprising, broke out of the Government Agricultural Farm at Castle Hill on March 4, 1804.</li><li style='margin-bottom:8px;'>Major George Johnston rode through the night from Sydney to Parramatta, covering 24 km in under 4 hours to mobilize troops and loyalist civilians.</li><li style='margin-bottom:8px;'>Philip Cunningham approached under a flag of truce at Rouse Hill; he was unceremoniously seized and summarily hanged at Hawkesbury without a court trial.</li><li style='margin-bottom:8px;'>The 1804 clash marked the first declaration of martial law in Australian history, enacted across Parramatta, Castle Hill, and the Hawkesbury basin.</li><li style='margin-bottom:8px;'>The New South Wales Corps (nicknamed Rum Corps) controlled the import of spirits, inflating prices up to 400% as a captive barter currency.</li><li style='margin-bottom:8px;'>John Macarthur arrived with £497 in capital and used military access to accumulate over 10,000 acres at the Cowpastures (Camden) for merino breeding.</li><li style='margin-bottom:8px;'>Governor William Bligh was arrested on January 26, 1808—the 20th anniversary of the First Fleet landing—when 400 soldiers of the NSW Corps marched on Government House.</li><li style='margin-bottom:8px;'>The Corps rebel administration governed New South Wales illegally for nearly two years until the arrival of Lachlan Macquarie on December 28, 1809.</li><li style='margin-bottom:8px;'>Major George Johnston was subsequently court-martialed at Chelsea Hospital in London in 1811 and cashiered (dismissed) from the British Army.</li><li style='margin-bottom:8px;'>The 1808 rebellion forced the British Colonial Office to abandon military administration and assign regular British regiments to enforce statutory oversight.</li></ol>
+        <h4 style="font-size:12px; color:#10b981; margin:0 0 10px; text-transform:uppercase;">10 Tactical Tall Facts</h4>
+        <ol style="padding-left:18px; margin:0; font-size:11px; color:#cbd5e1; line-height:1.45;">
+          <li style='margin-bottom:8px;'>Over 300 convicts, predominantly Irish political transportees from the 1798 uprising, broke out of the Government Agricultural Farm at Castle Hill on March 4, 1804.</li><li style='margin-bottom:8px;'>Major George Johnston rode through the night from Sydney to Parramatta, covering 24 km in under 4 hours to mobilize troops and loyalist civilians.</li><li style='margin-bottom:8px;'>Philip Cunningham approached under a flag of truce at Rouse Hill; he was unceremoniously seized and summarily hanged at Hawkesbury without a court trial.</li><li style='margin-bottom:8px;'>The 1804 clash marked the first declaration of martial law in Australian history, enacted across Parramatta, Castle Hill, and the Hawkesbury basin.</li><li style='margin-bottom:8px;'>The New South Wales Corps (nicknamed Rum Corps) controlled the import of spirits, inflating prices up to 400% as a captive barter currency.</li><li style='margin-bottom:8px;'>John Macarthur arrived with £497 in capital and used military access to accumulate over 10,000 acres at the Cowpastures (Camden) for merino breeding.</li><li style='margin-bottom:8px;'>Governor William Bligh was arrested on January 26, 1808—the 20th anniversary of the First Fleet landing—when 400 soldiers of the NSW Corps marched on Government House.</li><li style='margin-bottom:8px;'>The Corps rebel administration governed New South Wales illegally for nearly two years until the arrival of Lachlan Macquarie on December 28, 1809.</li><li style='margin-bottom:8px;'>Major George Johnston was subsequently court-martialed at Chelsea Hospital in London in 1811 and cashiered (dismissed) from the British Army.</li><li style='margin-bottom:8px;'>The 1808 rebellion forced the British Colonial Office to abandon military administration and assign regular British regiments to enforce statutory oversight.</li>
+        </ol>
       </div>
       <div>
-        <h4 style="font-size:13px; color:#38bdf8; margin:0 0 12px; text-transform:uppercase; font-weight:900;">10 Lyrical Lifelines</h4>
-        <div id="modal-lyrics"><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>“Pikes forged under moonlight cold”</strong><div style='color:#94a3b8;font-size:10.5px;'>Examine convict resistance networks across the Hawkesbury.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>“Parramatta drums call the line”</strong><div style='color:#94a3b8;font-size:10.5px;'>Track the speed and logistics of colonial military response.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>“Broken truce upon the hill”</strong><div style='color:#94a3b8;font-size:10.5px;'>Analyze the suspension of civil justice under martial law.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>“Nine swing from the gum”</strong><div style='color:#94a3b8;font-size:10.5px;'>Quantify judicial violence as an instrument of social order.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>“Rum buys land and grain”</strong><div style='color:#94a3b8;font-size:10.5px;'>Chart how cartel monopolies distorted early currency systems.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>“Scarlet coats take the state”</strong><div style='color:#94a3b8;font-size:10.5px;'>Define the Rum Rebellion as an economic coup d etat.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>“Fleece expands across the soil”</strong><div style='color:#94a3b8;font-size:10.5px;'>Map pastoral land grabs to First Nations displacement.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>“The Governor locked in chains”</strong><div style='color:#94a3b8;font-size:10.5px;'>Contrast naval executive command against local merchant capital.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>“Seventy-third disembarks the bay”</strong><div style='color:#94a3b8;font-size:10.5px;'>Trace Macquarie arrival to the birth of civil institutions.</div></div><div style='margin-bottom:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-left:3px solid #38bdf8;border-radius:4px;'><strong style='color:#38bdf8;font-size:12px;'>“Fiefdom bows to statute law”</strong><div style='color:#94a3b8;font-size:10.5px;'>Synthesize the transition from military monopoly to governance.</div></div></div>
+        <h4 style="font-size:12px; color:#38bdf8; margin:0 0 10px; text-transform:uppercase;">10 Lyrical Lifelines</h4>
+        <div>
+          <div style='margin-bottom:8px; padding:6px 10px; background:rgba(255,255,255,0.03); border-left:3px solid #38bdf8; border-radius:4px;'><strong style='color:#38bdf8; font-size:12px;'>&ldquo;Pikes forged under moonlight cold&rdquo;</strong><div style='color:#94a3b8; font-size:10.5px;'>Examine convict resistance networks across the Hawkesbury.</div></div><div style='margin-bottom:8px; padding:6px 10px; background:rgba(255,255,255,0.03); border-left:3px solid #38bdf8; border-radius:4px;'><strong style='color:#38bdf8; font-size:12px;'>&ldquo;Parramatta drums call the line&rdquo;</strong><div style='color:#94a3b8; font-size:10.5px;'>Track the speed and logistics of colonial military response.</div></div><div style='margin-bottom:8px; padding:6px 10px; background:rgba(255,255,255,0.03); border-left:3px solid #38bdf8; border-radius:4px;'><strong style='color:#38bdf8; font-size:12px;'>&ldquo;Broken truce upon the hill&rdquo;</strong><div style='color:#94a3b8; font-size:10.5px;'>Analyze the suspension of civil justice under martial law.</div></div><div style='margin-bottom:8px; padding:6px 10px; background:rgba(255,255,255,0.03); border-left:3px solid #38bdf8; border-radius:4px;'><strong style='color:#38bdf8; font-size:12px;'>&ldquo;Nine swing from the gum&rdquo;</strong><div style='color:#94a3b8; font-size:10.5px;'>Quantify judicial violence as an instrument of social order.</div></div><div style='margin-bottom:8px; padding:6px 10px; background:rgba(255,255,255,0.03); border-left:3px solid #38bdf8; border-radius:4px;'><strong style='color:#38bdf8; font-size:12px;'>&ldquo;Rum buys land and grain&rdquo;</strong><div style='color:#94a3b8; font-size:10.5px;'>Chart how cartel monopolies distorted early currency systems.</div></div><div style='margin-bottom:8px; padding:6px 10px; background:rgba(255,255,255,0.03); border-left:3px solid #38bdf8; border-radius:4px;'><strong style='color:#38bdf8; font-size:12px;'>&ldquo;Scarlet coats take the state&rdquo;</strong><div style='color:#94a3b8; font-size:10.5px;'>Define the Rum Rebellion as an economic coup d etat.</div></div><div style='margin-bottom:8px; padding:6px 10px; background:rgba(255,255,255,0.03); border-left:3px solid #38bdf8; border-radius:4px;'><strong style='color:#38bdf8; font-size:12px;'>&ldquo;Fleece expands across the soil&rdquo;</strong><div style='color:#94a3b8; font-size:10.5px;'>Map pastoral land grabs to First Nations displacement.</div></div><div style='margin-bottom:8px; padding:6px 10px; background:rgba(255,255,255,0.03); border-left:3px solid #38bdf8; border-radius:4px;'><strong style='color:#38bdf8; font-size:12px;'>&ldquo;The Governor locked in chains&rdquo;</strong><div style='color:#94a3b8; font-size:10.5px;'>Contrast naval executive command against local merchant capital.</div></div><div style='margin-bottom:8px; padding:6px 10px; background:rgba(255,255,255,0.03); border-left:3px solid #38bdf8; border-radius:4px;'><strong style='color:#38bdf8; font-size:12px;'>&ldquo;Seventy-third disembarks the bay&rdquo;</strong><div style='color:#94a3b8; font-size:10.5px;'>Trace Macquarie s arrival to the birth of civil institutions.</div></div><div style='margin-bottom:8px; padding:6px 10px; background:rgba(255,255,255,0.03); border-left:3px solid #38bdf8; border-radius:4px;'><strong style='color:#38bdf8; font-size:12px;'>&ldquo;Fiefdom bows to statute law&rdquo;</strong><div style='color:#94a3b8; font-size:10.5px;'>Synthesize the transition from military monopoly to governance.</div></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const PINS = [{"id": 1, "num": "01", "name": "Castle Hill Convict Barracks", "loc": "Castle Hill Farm", "x": 28, "y": 34, "kw": ["kw-castle-hill"], "fact": "Over 300 convicts, predominantly Irish political transportees from the 1798 uprising, broke out of the Government Agricultural Farm at Castle Hill on March 4, 1804.", "spk": "Philip Cunningham (Rebel Leader)", "quote": "Liberty or Death! The green harp flies. Parramatta falls tonight, and the French fleet shall see Sydney freed!", "reg": "These lads had copped twenty-five lashes too many on empty bellies and decided the whole penal colony was getting kicked over.", "edw": "Deploy this as your opening counter-thesis: Castle Hill proves convict resistance was an organized ideological revolt against an unchecked military administration, not common crime.", "music": "alarm"}, {"id": 2, "num": "02", "name": "Parramatta Military Outpost", "loc": "Parramatta Barracks", "x": 45, "y": 48, "kw": ["kw-castle-hill", "kw-cartels"], "fact": "Major George Johnston rode through the night from Sydney to Parramatta, covering 24 km in under 4 hours to mobilize troops and loyalist civilians.", "spk": "Major George Johnston (NSW Corps)", "quote": "Every officer and settler shall stand to arms before dawn. Parramatta must not burn.", "reg": "Johnston bolted down the dark bush track like lightning on horseback to muster his redcoats before the armoury was overrun.", "edw": "Cite Johnston's rapid mobilization to prove the colony lacked civil policing institutions\u2014the Crown relied entirely on garrison military power to maintain societal order.", "music": "cavalry"}, {"id": 3, "num": "03", "name": "Rouse Hill Battleground", "loc": "Windsor Road Ridge", "x": 35, "y": 42, "kw": ["kw-castle-hill", "kw-martial-law"], "fact": "Philip Cunningham approached under a flag of truce at Rouse Hill; he was unceremoniously seized and summarily hanged at Hawkesbury without a court trial.", "spk": "Father James Dixon (Eyewitness Priest)", "quote": "Cunningham stepped forward with a white handkerchief to parley. Before words could be traded, pistols were drawn and the line broke into slaughter.", "reg": "Cunningham walked up waving a white flag to talk peace, and the army nabbed him on the spot. Absolute dog act breaking every rule.", "edw": "Highlight this breach of truce as key evidence for undermined governance: Johnston abandoned British common law due process in favour of martial expediency.", "music": "musket"}, {"id": 4, "num": "04", "name": "Hawkesbury Settlement", "loc": "Green Hills (Windsor)", "x": 20, "y": 24, "kw": ["kw-martial-law", "kw-civil-gov"], "fact": "The 1804 clash marked the first declaration of martial law in Australian history, enacted across Parramatta, Castle Hill, and the Hawkesbury basin.", "spk": "Magistrate Samuel Marsden", "quote": "Under martial law, the civil magistrate yields to the bayonet. Nine hang upon the gibbet so the populace may learn terror and obedience.", "reg": "First time martial law got pulled in Aussie history. No courts, no juries\u2014just a rope and a tree branch.", "edw": "Use King's martial decree to show the fragility of colonial law: governance collapsed into military dictatorship whenever the convict majority resisted.", "music": "martial"}, {"id": 5, "num": "05", "name": "Commissariat Spirit Store", "loc": "Sydney Cove Wharf", "x": 72, "y": 50, "kw": ["kw-cartels"], "fact": "The New South Wales Corps (nicknamed Rum Corps) controlled the import of spirits, inflating prices up to 400% as a captive barter currency.", "spk": "William Gore (Provost-Marshal)", "quote": "Rum is the sovereign master of Sydney. The officers buy the holds clean, while small settlers mortgage their grain harvests for a single keg of spirits.", "reg": "The officers ran a massive booze cartel. If you were a small farmer, you had to pay their bloated liquor prices or lose your farm.", "edw": "Connect economic extortion directly to the question: the military officers were not public servants; they operated an illegal commercial syndicate that cannibalized Crown authority.", "music": "tavern"}, {"id": 6, "num": "06", "name": "Camden Cowpastures", "loc": "Camden Pastoral Estate", "x": 22, "y": 75, "kw": ["kw-cartels", "kw-civil-gov"], "fact": "John Macarthur arrived with \u00a3497 in capital and used military access to accumulate over 10,000 acres at the Cowpastures (Camden) for merino breeding.", "spk": "Captain John Macarthur (Pastoral Syndicate)", "quote": "This continent was not claimed for naval post-captains to govern like quarterdecks. Merino wool shall clothe the Empire, and my title deeds shall remain untouchable.", "reg": "Macarthur rocked up with spare change and stitched up ten thousand acres of prime land using his army mates. He answered to nobody.", "edw": "Macarthur represents the privatization of the state: evaluate how private pastoral cartels subordinated the colonial governor's Crown directives.", "music": "wind"}, {"id": 7, "num": "07", "name": "Government House, Sydney", "loc": "Bridge Street Domain", "x": 78, "y": 44, "kw": ["kw-rum-rebellion", "kw-cartels", "kw-civil-gov"], "fact": "Governor William Bligh was arrested on January 26, 1808\u2014the 20th anniversary of the First Fleet landing\u2014when 400 soldiers of the NSW Corps marched on Government House.", "spk": "Mary Putland (Daughter of Governor Bligh)", "quote": "They marched with drums and fifes playing 'The British Grenadiers.' They stormed the study with drawn swords and placed the King's representative under armed arrest.", "reg": "Australia's only real military coup d'\u00e9tat. Four hundred armed redcoats marched on Government House and locked Governor Bligh up.", "edw": "This is your primary thesis anchor: the Rum Rebellion proves that when Crown civil policy clashed with officer corporate profits, the military overthrew the state.", "music": "fife_march"}, {"id": 8, "num": "08", "name": "Corps Junta Headquarters", "loc": "George Street Barracks", "x": 70, "y": 58, "kw": ["kw-rum-rebellion", "kw-civil-gov"], "fact": "The Corps rebel administration governed New South Wales illegally for nearly two years until the arrival of Lachlan Macquarie on December 28, 1809.", "spk": "Lieut-Colonel Joseph Foveaux (Acting Junta)", "quote": "Order is maintained without the naval tyrant. Our military committee upholds commerce and guarantees stability across New South Wales.", "reg": "The army officers ran Sydney like their own boys' club for two years straight because news took six months just to sail back to Whitehall.", "edw": "Argue that the two-year delay in British response illustrates imperial distance friction: military rule entrenched itself before London could react.", "music": "gavel"}, {"id": 9, "num": "09", "name": "Sydney Harbour (Port Jackson)", "loc": "Sydney Cove Anchorage", "x": 86, "y": 34, "kw": ["kw-civil-gov"], "fact": "Major George Johnston was subsequently court-martialed at Chelsea Hospital in London in 1811 and cashiered (dismissed) from the British Army.", "spk": "Governor Lachlan Macquarie", "quote": "I assume the government of this territory. The New South Wales Corps is ordered home to Britain. The reign of private faction is at an end.", "reg": "Macquarie pulls into Sydney Harbour with his own battle-hardened Scots regiment and tells the Rum Corps their racket is permanently done. Pack your trunks.", "edw": "Contrast Macquarie's arrival against the rebellion: Crown sovereignty could only be restored by physically removing the corrupt garrison and introducing external imperial troops.", "music": "fanfare"}, {"id": 10, "num": "10", "name": "Statutory Court & Bank of NSW", "loc": "Macquarie Street Legal Precinct", "x": 76, "y": 64, "kw": ["kw-civil-gov", "kw-martial-law"], "fact": "The 1808 rebellion forced the British Colonial Office to abandon military administration and assign regular British regiments to enforce statutory oversight.", "spk": "Ellis Bent (First Civilian Judge-Advocate)", "quote": "The era of sword-rule is concluded. Independent courts, civil jurisprudence, and sound legal currency now safeguard the rule of law.", "reg": "The big exam punchline: London finally realized that letting soldiers run the bank, the court, and the farm ended in disaster, so they built proper legal institutions.", "edw": "Conclude your essay with this synthesis: the failure of military governance compelled the British state to construct durable, independent civil institutions.", "music": "echo"}];
+const PINS = [
+  {
+    "id": 1,
+    "num": "01",
+    "name": "Castle Hill Convict Barracks",
+    "loc": "Castle Hill Government Farm",
+    "x": 30,
+    "y": 32,
+    "keywords": [
+      "kw-castle-hill"
+    ],
+    "fact": "Over 300 convicts, predominantly Irish political transportees from the 1798 uprising, broke out of the Government Agricultural Farm at Castle Hill on March 4, 1804.",
+    "speaker": "Philip Cunningham (Eyewitness / Rebel Leader)",
+    "quote": "Liberty or Death! The green flag flies, and the boys from Wexford and Antrim shall take Parramatta before midnight!",
+    "reg_speaker": "Reg (Newcastle Slang-Scaffold)",
+    "reg": "Basically, three hundred Irish blokes had copped twenty-five lashes too many on empty bellies and decided the whole penal colony was getting kicked over.",
+    "sound_name": "Midnight Alarm & Gale Static",
+    "sound_type": "wind_alarm"
+  },
+  {
+    "id": 2,
+    "num": "02",
+    "name": "Parramatta Military Outpost",
+    "loc": "Parramatta Barracks & Road",
+    "x": 46,
+    "y": 48,
+    "keywords": [
+      "kw-castle-hill",
+      "kw-cartels"
+    ],
+    "fact": "Major George Johnston rode through the night from Sydney to Parramatta, covering 24 km in under 4 hours to mobilize troops and loyalist civilians.",
+    "speaker": "Major George Johnston (NSW Corps Commander)",
+    "quote": "Every horse in the settlement pressed into service. The Rum Corps must defend colonial sovereignty before the insurgents reach the storehouses.",
+    "reg_speaker": "Reg (Newcastle Slang-Scaffold)",
+    "reg": "Johnston strapped his boots on and hammered down the bush track on horseback flat out like a lizard drinking to muster his redcoats before daylight.",
+    "sound_name": "Galloping Cavalry & Drum Roll",
+    "sound_type": "cavalry_drum"
+  },
+  {
+    "id": 3,
+    "num": "03",
+    "name": "Rouse Hill (Vinegar Hill Battleground)",
+    "loc": "Rouse Hill Ridge",
+    "x": 36,
+    "y": 40,
+    "keywords": [
+      "kw-castle-hill",
+      "kw-martial-law"
+    ],
+    "fact": "Philip Cunningham approached under a flag of truce at Rouse Hill; he was unceremoniously seized and summarily hanged at Hawkesbury without a court trial.",
+    "speaker": "Father James Dixon (Eyewitness Priest)",
+    "quote": "A truce was parleyed upon the hill. Yet before words could resolve the agony, the redcoat commander seized Cunningham. The muskets answered in smoke.",
+    "reg_speaker": "Reg (Newcastle Slang-Scaffold)",
+    "reg": "Old Cunningham walks out waving a white rag to talk terms, and the redcoats just grab him by the scruff. So much for rules of engagement.",
+    "sound_name": "Musket Volley & Cold Whistle",
+    "sound_type": "musket_volley"
+  },
+  {
+    "id": 4,
+    "num": "04",
+    "name": "Hawkesbury Settlement",
+    "loc": "Green Hills (Windsor)",
+    "x": 22,
+    "y": 24,
+    "keywords": [
+      "kw-martial-law",
+      "kw-civil-gov"
+    ],
+    "fact": "The 1804 clash marked the first declaration of martial law in Australian history, enacted across Parramatta, Castle Hill, and the Hawkesbury basin.",
+    "speaker": "Magistrate Samuel Marsden",
+    "quote": "Under martial law, the civil courts cease. The sword alone maintains obedience. Nine rebels hang as a terror unto all who question authority.",
+    "reg_speaker": "Reg (Newcastle Slang-Scaffold)",
+    "reg": "First time martial law got pulled in Australia. No magistrates, no juries\u2014just the officer's decree and a rope over a gum tree.",
+    "sound_name": "Martial Drone & River Wind",
+    "sound_type": "drone_chains"
+  },
+  {
+    "id": 5,
+    "num": "05",
+    "name": "Commissariat & Spirit Warehouse",
+    "loc": "Sydney Cove Commercial Wharf",
+    "x": 74,
+    "y": 50,
+    "keywords": [
+      "kw-cartels"
+    ],
+    "fact": "The New South Wales Corps (nicknamed 'The Rum Corps') controlled the import of spirits, inflating prices up to 400% as a captive barter currency.",
+    "speaker": "William Gore (Provost-Marshal)",
+    "quote": "Rum is the lifeblood and the chain. The officers buy the cargo ships dry, then sell the spirits back to settlers at four times the London cost.",
+    "reg_speaker": "Reg (Newcastle Slang-Scaffold)",
+    "reg": "The officers ran a monopoly protection racket. If you needed tea, nails, or flour, you had to swap their overpriced rum or your farm went broke.",
+    "sound_name": "Tavern Hum & Clinking Copper Barter",
+    "sound_type": "coins_barter"
+  },
+  {
+    "id": 6,
+    "num": "06",
+    "name": "Camden Cowpastures (Macarthur)",
+    "loc": "Elizabeth Farm & Camden Estate",
+    "x": 24,
+    "y": 74,
+    "keywords": [
+      "kw-cartels",
+      "kw-civil-gov"
+    ],
+    "fact": "John Macarthur arrived with \u00a3497 in capital and used military access to accumulate over 10,000 acres at the Cowpastures (Camden) for merino breeding.",
+    "speaker": "Captain John Macarthur (Pastoral Syndicate)",
+    "quote": "This colony was not formed for the indolence of naval tyrants. Merino wool shall make Britain great, and my land grants shall not be rescinded.",
+    "reg_speaker": "Reg (Newcastle Slang-Scaffold)",
+    "reg": "Macarthur landed with pocket money and leveraged his officer syndicate into ten thousand acres of prime land. He wasn't taking orders from any naval governor.",
+    "sound_name": "Dry Frontier Wind & Whistle",
+    "sound_type": "pastoral_wind"
+  },
+  {
+    "id": 7,
+    "num": "07",
+    "name": "Government House, Sydney",
+    "loc": "Bridge Street / Government Domain",
+    "x": 78,
+    "y": 45,
+    "keywords": [
+      "kw-rum-rebellion",
+      "kw-cartels",
+      "kw-civil-gov"
+    ],
+    "fact": "Governor William Bligh was arrested on January 26, 1808\u2014the 20th anniversary of the First Fleet landing\u2014when 400 soldiers of the NSW Corps marched on Government House.",
+    "speaker": "Mary Putland (Daughter of Governor Bligh)",
+    "quote": "The redcoats marched with fifes playing 'The British Grenadiers.' They drew my father from his study with naked swords. It was open treason against the King.",
+    "reg_speaker": "Reg (Newcastle Slang-Scaffold)",
+    "reg": "Australia's only real military coup. Four hundred redcoats march up to Government House with bayonets fixed and put Governor Bligh under lock and key.",
+    "sound_name": "Regimental Fife & Marching Boots",
+    "sound_type": "fife_march"
+  },
+  {
+    "id": 8,
+    "num": "08",
+    "name": "Corps Military Junta Headquarters",
+    "loc": "George Street Barracks",
+    "x": 72,
+    "y": 58,
+    "keywords": [
+      "kw-rum-rebellion",
+      "kw-civil-gov"
+    ],
+    "fact": "The Corps' rebel administration governed New South Wales illegally for nearly two years until the arrival of Lachlan Macquarie on December 28, 1809.",
+    "speaker": "Lieut-Colonel Joseph Foveaux (Acting Junta)",
+    "quote": "Order is maintained without the naval despot. The military administration keeps the peace and protects free commerce across the territory.",
+    "reg_speaker": "Reg (Newcastle Slang-Scaffold)",
+    "reg": "The officers ran Sydney like their own private club for two full years because it took eight months just for a sailing boat to carry the news to London.",
+    "sound_name": "Gavel Strike & Resolute Bass Drone",
+    "sound_type": "gavel_bass"
+  },
+  {
+    "id": 9,
+    "num": "09",
+    "name": "Port Jackson Anchorage",
+    "loc": "Sydney Cove Harbour",
+    "x": 84,
+    "y": 36,
+    "keywords": [
+      "kw-civil-gov"
+    ],
+    "fact": "Governor Lachlan Macquarie arrived on December 28, 1809 with the 73rd Regiment, restoring British civil authority and dispatching the Rum Corps to England.",
+    "speaker": "Governor Lachlan Macquarie",
+    "quote": "I land with the 73rd Regiment of Foot. The New South Wales Corps is ordered home to England. British civil law and equity shall be restored.",
+    "reg_speaker": "Reg (Newcastle Slang-Scaffold)",
+    "reg": "Macquarie rocks up with his own battle-hardened Scottish regiment and tells the Rum Corps their party is officially finished. Pack your bags for London.",
+    "sound_name": "Harbour Ocean Swell & Royal Fanfare",
+    "sound_type": "ocean_fanfare"
+  },
+  {
+    "id": 10,
+    "num": "10",
+    "name": "Statutory Court & Bank of NSW",
+    "loc": "Macquarie Street Legal Precinct",
+    "x": 76,
+    "y": 64,
+    "keywords": [
+      "kw-civil-gov",
+      "kw-martial-law"
+    ],
+    "fact": "The 1808 rebellion forced the British Colonial Office to abandon military administration and assign regular British regiments to enforce statutory oversight.",
+    "speaker": "Ellis Bent (First Civilian Judge-Advocate)",
+    "quote": "The era of sword-rule is concluded. Statutory courts, independent juries, and sound currency now replace military monopoly in New South Wales.",
+    "reg_speaker": "Reg (Newcastle Slang-Scaffold)",
+    "reg": "The big takeaway for your exam: London finally realized that letting the local military battalion run the courts, the currency, and the stores is a disaster waiting to happen.",
+    "sound_name": "Cathedral Echo & Quill Scratch",
+    "sound_type": "hall_quill"
+  }
+];
+
 let activePinId = null;
 let audioCtx = null;
-let currentNodes = [];
-let masterGain = null;
+let activeSoundNodes = [];
+let isSoundPlaying = false;
 
 function initPins() {
   const container = document.getElementById('pins-container');
   container.innerHTML = '';
-  PINS.forEach(p => {
+  
+  PINS.forEach(pin => {
     const el = document.createElement('div');
     el.className = 'pin-marker';
-    el.id = `pin-${p.id}`;
-    el.style.left = `${p.x}%`;
-    el.style.top = `${p.y}%`;
+    el.id = `pin-${pin.id}`;
+    el.style.left = `${pin.x}%`;
+    el.style.top = `${pin.y}%`;
+    
     el.innerHTML = `
-      <div class="pin-beacon"></div>
-      <div class="pin-badge">${p.num}</div>
-      <div class="pin-caption">${p.name}</div>
+      <div class="pin-pulse"></div>
+      <div class="pin-icon">${pin.num}</div>
+      <div class="pin-tag">${pin.name}</div>
     `;
-    el.onclick = (e) => { e.stopPropagation(); selectPin(p.id); };
+    
+    el.onclick = (e) => {
+      e.stopPropagation();
+      selectPin(pin.id);
+    };
+    
     container.appendChild(el);
   });
 }
@@ -302,67 +680,81 @@ function selectPin(id) {
   const pin = PINS.find(p => p.id === id);
   if (!pin) return;
   activePinId = id;
+  
   document.querySelectorAll('.pin-marker').forEach(m => m.classList.remove('active-pin'));
   const pinEl = document.getElementById(`pin-${id}`);
   if (pinEl) pinEl.classList.add('active-pin');
+
   document.querySelectorAll('.hw-kw').forEach(kw => kw.classList.remove('active-highlight'));
-  pin.kw.forEach(kwId => {
+  pin.keywords.forEach(kwId => {
     const kwEl = document.getElementById(kwId);
     if (kwEl) kwEl.classList.add('active-highlight');
   });
-  drawTacticalChainLink(pinEl, pin.kw);
-  document.getElementById('d-title').textContent = `${pin.num} // ${pin.name}`;
-  document.getElementById('d-loc').textContent = pin.loc;
-  document.getElementById('d-fact').textContent = pin.fact;
-  document.getElementById('d-spk').textContent = pin.spk;
-  document.getElementById('d-quote').textContent = `“${pin.quote}”`;
-  document.getElementById('d-reg').textContent = pin.reg;
-  document.getElementById('d-edw').textContent = pin.edw;
-  document.getElementById('hud-drawer').style.display = 'flex';
-  startGentleAtmosphere(pin.music);
-  playFullVoiceSequence();
+
+  drawLaser(pinEl, pin.keywords);
+
+  document.getElementById('card-title').textContent = `${pin.num} // ${pin.name}`;
+  document.getElementById('card-loc').textContent = pin.loc;
+  document.getElementById('card-fact').textContent = pin.fact;
+  document.getElementById('card-speaker').textContent = pin.speaker;
+  document.getElementById('card-quote').textContent = `&ldquo;${pin.quote}&rdquo;`;
+  document.getElementById('card-reg-title').textContent = pin.reg_speaker;
+  document.getElementById('card-reg-text').textContent = pin.reg;
+  document.getElementById('btn-sound-label').textContent = pin.sound_name;
+  
+  document.getElementById('evidence-card').style.display = 'block';
+
+  stopSoundscape();
+  window.speechSynthesis.cancel();
+  playSoundscape(pin.sound_type);
+  setViz(true);
 }
 
-function drawTacticalChainLink(pinEl, keywords) {
+function drawLaser(pinEl, keywords) {
   const svg = document.getElementById('laser-svg');
-  if (!pinEl || !keywords.length) { svg.innerHTML = ''; return; }
-  const pinRect = pinEl.getBoundingClientRect();
-  const px = pinRect.left + pinRect.width / 2;
-  const py = pinRect.top + 8;
-  const targetEl = document.getElementById(keywords[0]);
-  if (!targetEl) return;
-  const tr = targetEl.getBoundingClientRect();
+  if (!pinEl || !keywords.length) {
+    svg.innerHTML = '';
+    return;
+  }
+  const rect = pinEl.getBoundingClientRect();
+  const px = rect.left + rect.width / 2;
+  const py = rect.top + 8;
+
+  const targetKw = document.getElementById(keywords[0]);
+  if (!targetKw) return;
+  const tr = targetKw.getBoundingClientRect();
   const tx = tr.left + tr.width / 2;
-  const ty = tr.bottom + 2;
+  const ty = tr.bottom;
+
   svg.innerHTML = `
     <defs>
-      <linearGradient id="chainGrad" x1="${px}" y1="${py}" x2="${tx}" y2="${ty}" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.95"/>
-        <stop offset="60%" stop-color="#38bdf8" stop-opacity="0.85"/>
+      <linearGradient id="laserGrad" x1="${px}" y1="${py}" x2="${tx}" y2="${ty}" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.9"/>
+        <stop offset="60%" stop-color="#38bdf8" stop-opacity="0.8"/>
         <stop offset="100%" stop-color="#10b981" stop-opacity="1"/>
       </linearGradient>
     </defs>
-    <path d="M ${px} ${py} Q ${(px+tx)/2} ${(py+ty)/2 - 35} ${tx} ${ty}" fill="none" stroke="rgba(245, 158, 11, 0.25)" stroke-width="8" stroke-linecap="round"/>
-    <path d="M ${px} ${py} Q ${(px+tx)/2} ${(py+ty)/2 - 35} ${tx} ${ty}" fill="none" stroke="url(#chainGrad)" stroke-width="3" stroke-dasharray="8,6"/>
-    <circle cx="${px}" cy="${py}" r="6" fill="#f59e0b" stroke="#ffffff" stroke-width="2"/>
-    <circle cx="${tx}" cy="${ty}" r="6" fill="#10b981" stroke="#ffffff" stroke-width="2"/>
+    <path d="M ${px} ${py} Q ${(px+tx)/2} ${(py+ty)/2 - 40} ${tx} ${ty}"
+          fill="none" stroke="url(#laserGrad)" stroke-width="2.5" stroke-dasharray="6,4"
+          filter="url(#glow)"/>
+    <circle cx="${tx}" cy="${ty}" r="4" fill="#fbbf24"/>
   `;
 }
 
-function closeDrawer() {
-  document.getElementById('hud-drawer').style.display = 'none';
+function closeCard() {
+  document.getElementById('evidence-card').style.display = 'none';
   document.querySelectorAll('.pin-marker').forEach(m => m.classList.remove('active-pin'));
   document.querySelectorAll('.hw-kw').forEach(kw => kw.classList.remove('active-highlight'));
   document.getElementById('laser-svg').innerHTML = '';
-  stopAllAudio();
+  stopSoundscape();
+  window.speechSynthesis.cancel();
+  setViz(false);
 }
 
-function toggleModal(id) {
-  const m = document.getElementById(id);
-  m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-}
+function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-function getAudioCtx() {
+function getAudioContext() {
   if (!audioCtx) {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     audioCtx = new AudioContext();
@@ -371,150 +763,150 @@ function getAudioCtx() {
   return audioCtx;
 }
 
-function startGentleAtmosphere(type) {
-  stopSoundscape();
+function playSoundscape(type) {
   try {
-    const ctx = getAudioCtx();
-    masterGain = ctx.createGain();
-    masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
-    masterGain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.3);
-    masterGain.connect(ctx.destination);
-    const bufferSize = ctx.sampleRate * 2;
-    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const output = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
-    const whiteNoise = ctx.createBufferSource();
-    whiteNoise.buffer = noiseBuffer;
-    whiteNoise.loop = true;
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(260, ctx.currentTime);
-    whiteNoise.connect(filter);
-    filter.connect(masterGain);
-    whiteNoise.start();
-    currentNodes.push(whiteNoise);
+    const ctx = getAudioContext();
+    stopSoundscape();
+    isSoundPlaying = true;
+    document.getElementById('btn-sound').classList.add('playing');
 
-    if (type === 'fife_march' || type === 'cavalry') {
-      const now = ctx.currentTime;
-      [587.33, 739.99, 880].forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const g = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.4);
-        g.gain.setValueAtTime(0.04, now + idx * 0.4);
-        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.4 + 0.38);
-        osc.connect(g);
-        g.connect(masterGain);
-        osc.start(now + idx * 0.4);
-        osc.stop(now + idx * 0.4 + 0.4);
-        currentNodes.push(osc);
-      });
+    if (type === 'fife_march' || type === 'cavalry_drum') {
+      playCadence(ctx);
+    } else if (type === 'coins_barter') {
+      playBarterCoins(ctx);
+    } else if (type === 'musket_volley') {
+      playMusketBlast(ctx);
+    } else {
+      playWindDrone(ctx);
     }
-    setWaveAnim(true);
-  } catch(e) {}
+  } catch(e) {
+    console.log("Audio gesture needed", e);
+  }
 }
 
 function stopSoundscape() {
-  if (masterGain && audioCtx) {
-    try {
-      masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-      masterGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.05);
-    } catch(e) {}
+  activeSoundNodes.forEach(n => {
+    try { n.stop(); n.disconnect(); } catch(e) {}
+  });
+  activeSoundNodes = [];
+  isSoundPlaying = false;
+  const btn = document.getElementById('btn-sound');
+  if (btn) btn.classList.remove('playing');
+  setViz(false);
+}
+
+function toggleCurrentSoundscape() {
+  if (isSoundPlaying) {
+    stopSoundscape();
+  } else {
+    const pin = PINS.find(p => p.id === activePinId);
+    if (pin) playSoundscape(pin.sound_type);
   }
-  currentNodes.forEach(n => { try { n.stop(); n.disconnect(); } catch(e) {} });
-  currentNodes = [];
-  setWaveAnim(false);
 }
 
-function stopAllAudio() {
-  stopSoundscape();
-  window.speechSynthesis.cancel();
-  clearSpeakerHighlights();
+function playWindDrone(ctx) {
+  const osc = ctx.createOscillator();
+  const filter = ctx.createBiquadFilter();
+  const gain = ctx.createGain();
+  osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(55, ctx.currentTime);
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(140, ctx.currentTime);
+  gain.gain.setValueAtTime(0.12, ctx.currentTime);
+  osc.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+  osc.start();
+  activeSoundNodes.push(osc);
 }
 
-function setWaveAnim(active) {
-  document.querySelectorAll('.wave-bar').forEach(b => {
-    if (active) b.classList.add('playing'); else b.classList.remove('playing');
+function playCadence(ctx) {
+  const now = ctx.currentTime;
+  for (let i = 0; i < 8; i++) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(120 + (i%2)*40, now + i*0.25);
+    gain.gain.setValueAtTime(0.15, now + i*0.25);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + i*0.25 + 0.15);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(now + i*0.25); osc.stop(now + i*0.25 + 0.16);
+    activeSoundNodes.push(osc);
+  }
+  const fife = ctx.createOscillator();
+  const fifeGain = ctx.createGain();
+  fife.type = 'sine';
+  fife.frequency.setValueAtTime(587.33, now);
+  fifeGain.gain.setValueAtTime(0.08, now);
+  fifeGain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
+  fife.connect(fifeGain); fifeGain.connect(ctx.destination);
+  fife.start(now); fife.stop(now + 2.1);
+  activeSoundNodes.push(fife);
+}
+
+function playBarterCoins(ctx) {
+  const now = ctx.currentTime;
+  [1200, 1600, 2200, 1800].forEach((freq, idx) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.frequency.setValueAtTime(freq, now + idx * 0.18);
+    gain.gain.setValueAtTime(0.1, now + idx * 0.18);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.18 + 0.12);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(now + idx * 0.18); osc.stop(now + idx * 0.18 + 0.15);
+    activeSoundNodes.push(osc);
   });
 }
 
-function clearSpeakerHighlights() {
-  document.querySelectorAll('.card-speaker').forEach(c => c.classList.remove('active-talking'));
+function playMusketBlast(ctx) {
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(160, now);
+  osc.frequency.exponentialRampToValueAtTime(40, now + 0.4);
+  gain.gain.setValueAtTime(0.3, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(now); osc.stop(now + 0.65);
+  activeSoundNodes.push(osc);
 }
 
-function playFullVoiceSequence() {
-  const pin = PINS.find(p => p.id === activePinId);
-  if (!pin || !('speechSynthesis' in window)) return;
+function playCurrentVoice() {
+  if (!('speechSynthesis' in window)) {
+    alert("Speech synthesis is not supported on this device.");
+    return;
+  }
   window.speechSynthesis.cancel();
-  clearSpeakerHighlights();
+  const pin = PINS.find(p => p.id === activePinId);
+  if (!pin) return;
 
-  const u1 = new SpeechSynthesisUtterance(pin.quote);
-  u1.rate = 0.92; u1.pitch = 0.9;
-  u1.onstart = () => { clearSpeakerHighlights(); document.getElementById('card-eyewitness').classList.add('active-talking'); };
+  const textToSpeak = `${pin.speaker} says: "${pin.quote}". Now here is Reg's perspective: "${pin.reg}"`;
+  const utter = new SpeechSynthesisUtterance(textToSpeak);
+  utter.rate = 0.95;
+  utter.pitch = 1.0;
+  
+  utter.onstart = () => setViz(true);
+  utter.onend = () => setViz(isSoundPlaying);
+  utter.onerror = () => setViz(isSoundPlaying);
 
-  const u2 = new SpeechSynthesisUtterance("Reg here: " + pin.reg);
-  u2.rate = 1.05; u2.pitch = 1.12;
-  u2.onstart = () => { clearSpeakerHighlights(); document.getElementById('card-reg').classList.add('active-talking'); };
-
-  const u3 = new SpeechSynthesisUtterance("Avatar Edwina's essay strategy: " + pin.edw);
-  u3.rate = 0.95; u3.pitch = 1.0;
-  u3.onstart = () => { clearSpeakerHighlights(); document.getElementById('card-edwina').classList.add('active-talking'); };
-  u3.onend = () => clearSpeakerHighlights();
-
-  u1.onend = () => window.speechSynthesis.speak(u2);
-  u2.onend = () => window.speechSynthesis.speak(u3);
-  window.speechSynthesis.speak(u1);
+  window.speechSynthesis.speak(utter);
 }
 
-function playSingleSpeaker(who) {
-  const pin = PINS.find(p => p.id === activePinId);
-  if (!pin || !('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
-  clearSpeakerHighlights();
-  let text = "", rate = 1.0, pitch = 1.0;
-  if (who === 'eyewitness') { text = pin.quote; rate = 0.92; pitch = 0.9; document.getElementById('card-eyewitness').classList.add('active-talking'); }
-  else if (who === 'reg') { text = "Reg here: " + pin.reg; rate = 1.05; pitch = 1.12; document.getElementById('card-reg').classList.add('active-talking'); }
-  else if (who === 'edwina') { text = "Avatar Edwina: " + pin.edw; rate = 0.95; pitch = 1.0; document.getElementById('card-edwina').classList.add('active-talking'); }
-  const u = new SpeechSynthesisUtterance(text);
-  u.rate = rate; u.pitch = pitch;
-  u.onend = () => clearSpeakerHighlights();
-  window.speechSynthesis.speak(u);
+function setViz(active) {
+  document.querySelectorAll('.viz-bar').forEach(b => {
+    if (active) b.classList.add('active');
+    else b.classList.remove('active');
+  });
 }
 
 window.addEventListener('resize', () => {
   if (activePinId) {
     const pin = PINS.find(p => p.id === activePinId);
     const pinEl = document.getElementById(`pin-${activePinId}`);
-    if (pin && pinEl) drawTacticalChainLink(pinEl, pin.kw);
+    if (pin && pinEl) drawLaser(pinEl, pin.keywords);
   }
 });
 
 document.addEventListener('DOMContentLoaded', initPins);
 </script>
-
-<script>
-window.showDossierModal = function() {
-  const existing = document.getElementById('curriculum-dossier-modal');
-  if (existing) { existing.remove(); return; }
-  const div = document.createElement('div');
-  div.id = 'curriculum-dossier-modal';
-  div.style.cssText = 'position:fixed; inset:20px; background:rgba(6,10,18,0.97); border:1px solid #38bdf8; border-radius:12px; z-index:9999; padding:24px; overflow-y:auto; color:#f1f5f9; box-shadow:0 0 50px rgba(0,0,0,0.9); font-family:sans-serif;';
-  div.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:12px; margin-bottom:16px;">
-      <h2 style="color:#38bdf8; font-size:18px; margin:0;">EP06 // Full Sovereign Dossier (10+10 Primary Archive)</h2>
-      <button onclick="document.getElementById('curriculum-dossier-modal').remove()" style="background:#ef4444; color:#fff; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:700;">CLOSE [✕]</button>
-    </div>
-    <div style="font-size:13px; line-height:1.6; white-space:pre-wrap; font-family:monospace; color:#cbd5e1;">${"# Australian History EP06 // Manifest Assets & Visual Dossier\n**NESA Stage 5 History (1804\u20131808)**\n\n## \ud83c\udfaf Central Homework Question\n> *To what extent did the **Castle Hill Convict Rebellion (1804)** and the **Rum Rebellion (1808)** demonstrate that **military cartels** and **martial law** undermined **British civil governance** in early colonial New South Wales?*\n\n---\n## \ud83d\udccb Historic SitRep & TFCC\n- **Date Range:** March 4\u20135, 1804 (Castle Hill) & January 26, 1808 (Rum Rebellion)\n- **Locations:** Castle Hill / Rouse Hill (Toongabbie) and Government House, Sydney\n- **Authority Forces:** Major George Johnston & Lieutenant-Governor William Paterson (NSW Corps)\n- **Resistance Forces:** Philip Cunningham & William Johnston (Castle Hill); Governor William Bligh (1808)\n- **Toll & Costs:** ~15 convicts killed in battle at Rouse Hill; 9 executed; 2 hanged in chains; Bligh placed under house arrest for over a year\n- **Systemic Consequence:** Crown intervention ending private military trade monopolies; deployment of Macquarie in 1810 to establish institutional governance.\n\n| Module | Operational Ledger |\n| :--- | :--- |\n| **1. Trigger** | The suppression of the 1798 Irish Rebellion transporting United Irishmen to Sydney, intersecting with the NSW Corps monopoly over spirits and land barter. |\n| **2. Forces** | Agrarian Irish republican insurgency and martial law vs. entrenched military mercantilism and private syndicate cartels under John Macarthur. |\n| **3. Costs** | 15 convicts executed at Castle Hill/Sydney; total subversion of Crown civil administration in the only military coup d etat on Australian soil. |\n| **4. Consequence** | The recall of Governor William Bligh, the permanent dismantling and replacement of the NSW Corps by Governor Lachlan Macquarie s 73rd Regiment, and the formal transition from penal fiefdom to civil rule of law. |\n\n---\n## \ud83c\udfac 10 Operational Scenes & Manifest Asset Inventory\n\n### Scene 01: Castle Hill Convict Barracks (Castle Hill Farm)\n**Keywords:** `kw-castle-hill`\n\n> **\ud83d\udcdc Verified Tall Fact:** Over 300 convicts, predominantly Irish transportees from the 1798 uprising, broke out of Castle Hill farm on March 4, 1804.\n> *Footnote Citation:* HRNSW, Vol. V, pp. 345\u2013347 (Governor King's Despatch).\n\n- **1. Eyewitness (Philip Cunningham (Rebel Leader)):** *\"Liberty or Death! The green harp flies. Parramatta falls tonight!\"*\n- **2. Reg (Slang-Scaffold):** These lads had copped 25 lashes too many on empty bellies and decided to kick the colony over.\n- **3. Avatar Edwina (Band 6 Strategy):** **Open with ideological friction: Castle Hill was an organized republican revolt against military autocracy, not common crime.**\n\n---\n\n### Scene 02: Parramatta Military Outpost (Parramatta Barracks)\n**Keywords:** `kw-castle-hill, kw-cartels`\n\n> **\ud83d\udcdc Verified Tall Fact:** Major George Johnston rode through the night from Sydney to Parramatta, covering 24 km in under 4 hours to muster troops.\n> *Footnote Citation:* Sydney Gazette, 11 March 1804; Trial of Lieut. Col. Johnston (1811).\n\n- **1. Eyewitness (Major George Johnston (NSW Corps)):** *\"Every officer and settler shall stand to arms before dawn. Parramatta must not burn.\"*\n- **2. Reg (Slang-Scaffold):** Johnston bolted down the dark bush track like lightning on horseback to muster the redcoats before sunrise.\n- **3. Avatar Edwina (Band 6 Strategy):** **Cite Johnston's rapid mobilization: with no civil police force, garrison readiness was the sole mechanism preserving order.**\n\n---\n\n### Scene 03: Rouse Hill Battleground (Windsor Road Ridge)\n**Keywords:** `kw-castle-hill, kw-martial-law`\n\n> **\ud83d\udcdc Verified Tall Fact:** Philip Cunningham approached under a flag of truce at Rouse Hill; he was summarily seized and executed without trial.\n> *Footnote Citation:* Rev. James Dixon Despatch (April 1804); Lynette Silver, 'The Battle of Vinegar Hill' (2002).\n\n- **1. Eyewitness (Father James Dixon (Priest)):** *\"Cunningham stepped forward with a white handkerchief to parley. Pistols were drawn and slaughter ensued.\"*\n- **2. Reg (Slang-Scaffold):** Cunningham walked up waving a white flag to talk peace, and the army nabbed him on the spot. Absolute dog act.\n- **3. Avatar Edwina (Band 6 Strategy):** **Highlight this breach of truce: Johnston abandoned British common law due process in favor of martial expediency.**\n\n---\n\n### Scene 04: Hawkesbury Settlement (Green Hills (Windsor))\n**Keywords:** `kw-martial-law, kw-civil-gov`\n\n> **\ud83d\udcdc Verified Tall Fact:** The 1804 clash marked the first declaration of martial law in Australian history, enacted across Parramatta and the Hawkesbury.\n> *Footnote Citation:* NSW Government Proclamations, Governor Philip Gidley King, 5 March 1804.\n\n- **1. Eyewitness (Magistrate Samuel Marsden):** *\"Under martial law, the civil magistrate yields to the bayonet. Nine hang upon the gibbet.\"*\n- **2. Reg (Slang-Scaffold):** First time martial law got pulled in Aussie history. No courts, no juries\u2014just a rope and a tree branch.\n- **3. Avatar Edwina (Band 6 Strategy):** **Use King's decree to demonstrate institutional breakdown: governance collapsed into military rule when convict labor revolted.**\n\n---\n\n### Scene 05: Commissariat Spirit Store (Sydney Cove Wharf)\n**Keywords:** `kw-cartels`\n\n> **\ud83d\udcdc Verified Tall Fact:** The NSW Corps controlled spirit imports, inflating spirit barter prices up to 400% and foreclosing small settler farms.\n> *Footnote Citation:* Bligh Despatches, HRNSW Vol. VI; H.V. Evatt, 'Rum Rebellion' (1938).\n\n- **1. Eyewitness (William Gore (Provost-Marshal)):** *\"Rum is the sovereign master of Sydney. Settlers mortgage their harvests for a single keg of spirits.\"*\n- **2. Reg (Slang-Scaffold):** The officers ran a massive booze cartel. If you were a small farmer, you paid their bloated prices or went broke.\n- **3. Avatar Edwina (Band 6 Strategy):** **Connect economic extortion to the question: officer cartels were not public servants, but an illegal commercial syndicate.**\n\n---\n\n### Scene 06: Camden Cowpastures (Camden Pastoral Estate)\n**Keywords:** `kw-cartels, kw-civil-gov`\n\n> **\ud83d\udcdc Verified Tall Fact:** John Macarthur used military officer privilege to secure 10,000 acres of prime grazing land at the Cowpastures for merino breeding.\n> *Footnote Citation:* Camden Papers, Mitchell Library MS A4343; British Parliamentary Committee (1812).\n\n- **1. Eyewitness (Captain John Macarthur):** *\"This continent was not claimed for naval post-captains. Merino wool shall clothe the Empire.\"*\n- **2. Reg (Slang-Scaffold):** Macarthur rocked up with spare change and stitched up ten thousand acres using his army mates. He answered to nobody.\n- **3. Avatar Edwina (Band 6 Strategy):** **Analyze Macarthur as the privatization of state power: private pastoral cartels subordinated the colonial governor's Crown directives.**\n\n---\n\n### Scene 07: Government House, Sydney (Bridge Street Domain)\n**Keywords:** `kw-rum-rebellion, kw-cartels, kw-civil-gov`\n\n> **\ud83d\udcdc Verified Tall Fact:** On January 26, 1808, 400 armed soldiers of the NSW Corps marched with bayonets fixed to depose Governor William Bligh in Australia's only coup.\n> *Footnote Citation:* Proceedings of Court-Martial for Trial of Lieut. Col. Johnston, Chelsea Hospital (1811).\n\n- **1. Eyewitness (Mary Putland (Bligh's Daughter)):** *\"They marched with fifes playing The British Grenadiers, storming the study with drawn swords.\"*\n- **2. Reg (Slang-Scaffold):** Australia's only real military coup d'\u00e9tat. 400 armed redcoats marched on Government House and locked Governor Bligh up.\n- **3. Avatar Edwina (Band 6 Strategy):** **Core thesis culmination: the Rum Rebellion proves that when Crown civil policy clashed with private military profit, the garrison committed treason.**\n\n---\n\n### Scene 08: Corps Junta Headquarters (George Street Barracks)\n**Keywords:** `kw-rum-rebellion, kw-civil-gov`\n\n> **\ud83d\udcdc Verified Tall Fact:** The military junta governed New South Wales illegally for nearly two years until the arrival of Lachlan Macquarie on December 28, 1809.\n> *Footnote Citation:* Minutes of Rebel Administration under Foveaux & Paterson, State Records NSW.\n\n- **1. Eyewitness (Lieut-Colonel Joseph Foveaux):** *\"Order is maintained without the naval tyrant. Our military committee upholds commerce.\"*\n- **2. Reg (Slang-Scaffold):** The officers ran Sydney like their own boys' club for two years because news took six months just to sail back to Whitehall.\n- **3. Avatar Edwina (Band 6 Strategy):** **Synthesize distance friction: imperial communications lag allowed an illegal junta to entrench administrative power without oversight.**\n\n---\n\n### Scene 09: Sydney Harbour (Port Jackson) (Sydney Cove Anchorage)\n**Keywords:** `kw-civil-gov`\n\n> **\ud83d\udcdc Verified Tall Fact:** Governor Lachlan Macquarie arrived on December 28, 1809 with the 73rd Highland Regiment, disbanding and banishing the NSW Corps.\n> *Footnote Citation:* Proclamation of Governor Lachlan Macquarie, Sydney Gazette Extraordinary, 1 Jan 1810.\n\n- **1. Eyewitness (Governor Lachlan Macquarie):** *\"I assume the government. The NSW Corps is ordered home to Britain. The reign of private faction is at an end.\"*\n- **2. Reg (Slang-Scaffold):** Macquarie pulls into Sydney with his battle-hardened Scots regiment and tells the Rum Corps their racket is done. Pack your trunks.\n- **3. Avatar Edwina (Band 6 Strategy):** **Use Macquarie's arrival for your conclusion: Crown civil sovereignty could only be restored by physically removing the corrupt garrison.**\n\n---\n\n### Scene 10: Statutory Court & Bank of NSW (Macquarie Street Legal Precinct)\n**Keywords:** `kw-civil-gov, kw-martial-law`\n\n> **\ud83d\udcdc Verified Tall Fact:** The 1808 rebellion forced London to replace military tribunals with civilian courts, introduce statutory charters, and establish the Bank of NSW.\n> *Footnote Citation:* Second Charter of Justice (1814); Ellis Bent Legal Reports to Earl Bathurst (1811\u20131815).\n\n- **1. Eyewitness (Ellis Bent (Judge-Advocate)):** *\"The era of sword-rule is concluded. Independent courts and sound legal currency now safeguard the rule of law.\"*\n- **2. Reg (Slang-Scaffold):** The big exam punchline: London finally realized letting soldiers run the bank and courts was madness, so they built proper legal institutions.\n- **3. Avatar Edwina (Band 6 Strategy):** **Conclude with structural transformation: the crisis forced Britain to transition New South Wales from a penal fiefdom to a rule-of-law society.**\n\n---\n"}</div>
-  `;
-  document.body.appendChild(div);
-};
-document.querySelectorAll('button, .hud-btn, a').forEach(el => {
-  if (el.textContent.includes('Dossier') || el.textContent.includes('SitRep')) {
-    el.onclick = window.showDossierModal;
-    el.style.cursor = 'pointer';
-  }
-});
-</script>
 </body>
-
 </html>
